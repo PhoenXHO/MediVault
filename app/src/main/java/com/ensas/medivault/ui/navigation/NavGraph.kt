@@ -19,7 +19,9 @@ fun NavGraph() {
     // `rememberNavController` is used to create a NavController that will manage the navigation
     val navController = rememberNavController()
     // The NavHost composable is used to define the navigation paths in the app
-    NavHost(navController = navController, startDestination = Screen.MedicationsList.route) {
+    NavHost(navController = navController,
+        startDestination = Screen.MedicationsList.route) {
+
         composable(Screen.Search.route) {
             SearchScreen(navController)
         }
@@ -33,7 +35,9 @@ fun NavGraph() {
         }
         composable(
             route = Screen.MedicationDetails.createRoute("{medicationId}"),
-            arguments = listOf(navArgument("medicationId") { type = NavType.StringType })
+            arguments = listOf(navArgument("medicationId") {
+                type = NavType.StringType
+            })
         ) { backStackEntry ->
             MainScaffold(navController) {
                 MedicationDetailsScreen(

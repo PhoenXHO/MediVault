@@ -58,7 +58,8 @@ fun MedicationsListScreen(navController: NavController,
                 medication = medication,
                 cartViewModel = cartViewModel,
                 onItemClick = { medicationId ->
-                    navController.navigate(Screen.MedicationDetails.createRoute(medicationId))
+                    navController.navigate(
+                        Screen.MedicationDetails.createRoute(medicationId))
                 }
             )
         }
