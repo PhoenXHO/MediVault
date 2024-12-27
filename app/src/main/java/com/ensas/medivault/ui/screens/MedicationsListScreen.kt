@@ -1,0 +1,73 @@
+package com.ensas.medivault.ui.screens
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.ui.components.MedicationItem
+import com.ensas.medivault.ui.navigation.Screen
+import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.viewmodel.CartViewModel
+import com.ensas.medivault.viewmodel.MedicationsViewModel
+
+// For the screen that displays the list of medications
+@Composable
+fun MedicationsListScreen(navController: NavController,
+                          cartViewModel: CartViewModel = viewModel(),
+                          viewModel: MedicationsViewModel = viewModel()) {
+    // Get the list of medications from the view model
+    // `collectAsState` is used to observe the state of the medications and recompose the UI when the state changes
+    // (Equivalent to using `ObservableCollection` in .NET)
+    val medications by viewModel.medications.collectAsState()
+
+    // `rememberLazyGridState` is used to save the scroll state of the grid
+    val state = rememberLazyGridState()
+
+    // `LazyVerticalGrid` is a vertically scrolling grid that only composes and lays out the currently visible items
+    // (Equivalent to using a `RecyclerView` with a `GridLayoutManager` in Android)
+    LazyVerticalGrid(
+        state = state,
+        modifier = Modifier
+            .fillMaxSize(),
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(Dimensions.paddingMedium),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.marginSmall),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        userScrollEnabled = true
+    ) {
+        items(medications) { medication ->
+            MedicationItem(
+                medication = medication,
+                cartViewModel = cartViewModel,
+                onItemClick = { medicationId ->
+                    navController.navigate(Screen.MedicationDetails.createRoute(medicationId))
+                }
+            )
+        }
+    }
+}
+
+// Preview of the MedicationsListScreen
+@Preview(showBackground = true)
+@Composable
+fun MedicationsListScreenPreview() {
+    MedicationsListScreen(navController = rememberNavController())
+}
