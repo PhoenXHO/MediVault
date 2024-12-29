@@ -3,6 +3,7 @@ package com.ensas.medivault.ui.theme
 import androidx.compose.ui.unit.dp
 
 object Dimensions {
+    val radiusExtraSmall = 2.dp
     val radiusSmall = 4.dp
     val radiusMedium = 8.dp
     val radiusLarge = 16.dp

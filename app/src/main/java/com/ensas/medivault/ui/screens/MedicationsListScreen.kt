@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -31,7 +32,7 @@ import com.ensas.medivault.viewmodel.MedicationsViewModel
 // For the screen that displays the list of medications
 @Composable
 fun MedicationsListScreen(navController: NavController,
-                          cartViewModel: CartViewModel = viewModel(),
+                          cartViewModel: CartViewModel,
                           viewModel: MedicationsViewModel = viewModel()) {
     // Get the list of medications from the view model
     // `collectAsState` is used to observe the state of the medications and recompose the UI when the state changes
@@ -39,18 +40,16 @@ fun MedicationsListScreen(navController: NavController,
     val medications by viewModel.medications.collectAsState()
 
     // `rememberLazyGridState` is used to save the scroll state of the grid
-    val state = rememberLazyGridState()
+    val state = rememberLazyListState()
 
-    // `LazyVerticalGrid` is a vertically scrolling grid that only composes and lays out the currently visible items
-    // (Equivalent to using a `RecyclerView` with a `GridLayoutManager` in Android)
-    LazyVerticalGrid(
+    // `LazyColumn` is a vertically scrolling grid that only composes and lays out the currently visible items
+    // (Equivalent to using `RecyclerView` in Android)
+    LazyColumn(
         state = state,
         modifier = Modifier
             .fillMaxSize(),
-        columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(Dimensions.paddingMedium),
         verticalArrangement = Arrangement.spacedBy(Dimensions.marginSmall),
-        horizontalArrangement = Arrangement.SpaceBetween,
         userScrollEnabled = true
     ) {
         items(medications) { medication ->
@@ -59,7 +58,8 @@ fun MedicationsListScreen(navController: NavController,
                 cartViewModel = cartViewModel,
                 onItemClick = { medicationId ->
                     navController.navigate(
-                        Screen.MedicationDetails.createRoute(medicationId))
+                        Screen.MedicationDetails.createRoute(medicationId)
+                    )
                 }
             )
         }
@@ -70,5 +70,5 @@ fun MedicationsListScreen(navController: NavController,
 @Preview(showBackground = true)
 @Composable
 fun MedicationsListScreenPreview() {
-    MedicationsListScreen(navController = rememberNavController())
+    MedicationsListScreen(navController = rememberNavController(), cartViewModel = viewModel())
 }

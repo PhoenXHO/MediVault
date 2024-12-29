@@ -6,5 +6,9 @@ data class Medication (
     val name: String,
     val description: String,
     val price: Double, // In MAD
-    val imageUrl: String = "https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/android/android.png"
+    val contents: String,
+    val quantity: Int = 0,
+    val imageUrl: String = "https://phabcart.imgix.net/cdn/scdn/images/uploads/m0459_web.jpg?auto=compress&lossless=1&w=385",
+    val usageInstructions: String,
+    val manufacturer: String,
 )

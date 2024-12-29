@@ -7,30 +7,29 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ensas.medivault.ui.components.MainScaffold
 import com.ensas.medivault.ui.screens.CartScreen
 import com.ensas.medivault.ui.screens.MedicationDetailsScreen
 import com.ensas.medivault.ui.screens.MedicationsListScreen
 import com.ensas.medivault.ui.screens.SearchScreen
+import com.ensas.medivault.viewmodel.CartViewModel
 
-// For the navigation graph, which defines the navigation paths in the app
 @Composable
-fun NavGraph() {
-    // `rememberNavController` is used to create a NavController that will manage the navigation
+fun NavGraph(cartViewModel: CartViewModel = viewModel()) {
     val navController = rememberNavController()
-    // The NavHost composable is used to define the navigation paths in the app
     NavHost(navController = navController,
         startDestination = Screen.MedicationsList.route) {
 
         composable(Screen.Search.route) {
-            SearchScreen(navController)
+            SearchScreen(navController, cartViewModel)
         }
         composable(Screen.Cart.route) {
-            CartScreen(navController)
+            CartScreen(navController, cartViewModel)
         }
         composable(Screen.MedicationsList.route) {
             MainScaffold(navController) {
-                MedicationsListScreen(navController)
+                MedicationsListScreen(navController, cartViewModel)
             }
         }
         composable(
@@ -42,7 +41,8 @@ fun NavGraph() {
             MainScaffold(navController) {
                 MedicationDetailsScreen(
                     navController = navController,
-                    medicationId = backStackEntry.arguments?.getString("medicationId")
+                    medicationId = backStackEntry.arguments?.getString("medicationId"),
+                    cartViewModel = cartViewModel
                 )
             }
         }

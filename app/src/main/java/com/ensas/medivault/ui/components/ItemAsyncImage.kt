@@ -2,8 +2,8 @@ package com.ensas.medivault.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +20,8 @@ import coil3.util.DebugLogger
 @Composable
 fun ItemAsyncImage(
     imageUrl: String,
-    contentDescription: String
+    contentDescription: String,
+    modifier: Modifier? = null
 ) {
     val imageLoader = LocalContext.current.imageLoader.newBuilder()
         .logger(DebugLogger())
@@ -32,9 +33,8 @@ fun ItemAsyncImage(
             .data(imageUrl)
             .crossfade(true)
             .build(),
-        modifier = Modifier // Set the size of the image
-            .fillMaxWidth()
-            .height(200.dp),
+        modifier = modifier ?: Modifier // Set the size of the image
+            .fillMaxSize(),
         contentScale = ContentScale.Crop,
         imageLoader = imageLoader,
         loading = {

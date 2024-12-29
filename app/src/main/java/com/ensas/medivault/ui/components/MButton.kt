@@ -1,6 +1,5 @@
 package com.ensas.medivault.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
@@ -15,14 +14,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MButton(
     onClick: () -> Unit,
+    modifier: Modifier? = null,
     content: @Composable () -> Unit
 ) {
     Button(
         onClick = onClick,
         shape = MaterialTheme.shapes.medium,
-        colors = ButtonDefaults.buttonColors(
-        ),
-        modifier = Modifier
+        colors = ButtonDefaults.buttonColors(),
+        modifier = modifier ?: Modifier
             .fillMaxWidth()
             .height(40.dp)
     ) {

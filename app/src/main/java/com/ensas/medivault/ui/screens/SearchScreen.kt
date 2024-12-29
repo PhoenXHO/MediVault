@@ -9,12 +9,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.viewmodel.CartViewModel
 
 // For the screen that displays the search results
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -29,5 +31,5 @@ fun SearchScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(navController = rememberNavController())
+    SearchScreen(navController = rememberNavController(), cartViewModel = viewModel())
 }

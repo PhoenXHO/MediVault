@@ -10,6 +10,28 @@ class CartViewModel : ViewModel() {
     val cartItems: StateFlow<List<Medication>> = _cartItems
 
     fun addToCart(medication: Medication) {
-        _cartItems.value += medication
+        if (_cartItems.value.any { it.id == medication.id }) {
+            updateQuantity(medication.id, getQuantity(medication.id) + 1)
+        } else {
+            _cartItems.value += medication.copy(quantity = 1)
+        }
+    }
+
+    fun removeFromCart(id: String) {
+        _cartItems.value = _cartItems.value.filter { it.id != id }
+    }
+
+    fun updateQuantity(id: String, quantity: Int) {
+        _cartItems.value = _cartItems.value.map {
+            if (it.id == id) {
+                it.copy(quantity = quantity)
+            } else {
+                it
+            }
+        }
+    }
+
+    private fun getQuantity(id: String): Int {
+        return _cartItems.value.find { it.id == id }?.quantity ?: 0
     }
 }
