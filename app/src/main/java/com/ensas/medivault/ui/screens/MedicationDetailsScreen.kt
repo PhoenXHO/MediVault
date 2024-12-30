@@ -1,40 +1,33 @@
 package com.ensas.medivault.ui.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.ui.components.MButton
+import com.ensas.medivault.ui.components.QuantityChooser
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.MedicationDetailsViewModel
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import com.ensas.medivault.ui.components.QuantityChooser
 
 @Composable
 fun MedicationDetailsScreen(navController: NavController,
                             medicationId: String?,
-                            cartViewModel: CartViewModel = viewModel(),
-                            viewModel: MedicationDetailsViewModel = viewModel()) {
+                            cartViewModel: CartViewModel = hiltViewModel(),
+                            viewModel: MedicationDetailsViewModel = hiltViewModel()) {
     medicationId?.let {
         viewModel.fetchMedicationDetails(it)
     }

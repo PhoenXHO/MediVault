@@ -2,6 +2,7 @@ package com.ensas.medivault.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,7 +17,7 @@ import com.ensas.medivault.ui.screens.SearchScreen
 import com.ensas.medivault.viewmodel.CartViewModel
 
 @Composable
-fun NavGraph(cartViewModel: CartViewModel = viewModel()) {
+fun NavGraph(cartViewModel: CartViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     NavHost(navController = navController,
         startDestination = Screen.MedicationsList.route) {

@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ensas.medivault.data.model.Medication
 import com.ensas.medivault.data.repository.MedicationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-// For the view model that provides data for the medications screen
-class MedicationsViewModel(private val repository: MedicationRepository = MedicationRepository()) : ViewModel() {
+@HiltViewModel
+class MedicationsViewModel @Inject constructor(private val repository: MedicationRepository) : ViewModel() {
     // A list of medications
     // MutableStateFlow is a type of Flow that allows you to change its value
     // A StateFlow is a type of Flow that represents a read-only state with a single updatable data value

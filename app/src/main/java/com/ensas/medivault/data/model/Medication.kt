@@ -1,8 +1,11 @@
 package com.ensas.medivault.data.model
 
-// To store the medication data
-data class Medication (
-    val id: String,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "medications")
+data class Medication(
+    @PrimaryKey val id: String,
     val name: String,
     val description: String,
     val price: Double, // In MAD

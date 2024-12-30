@@ -1,4 +1,7 @@
 plugins {
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
+
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
@@ -46,6 +49,16 @@ dependencies {
     implementation(libs.coil.network.okhttp) // Coil's OkHttp extension for network loading
     implementation(libs.androidx.navigation.compose) // Navigation for Jetpack Compose
     implementation(libs.hilt.android) // Hilt for dependency injection
+
+    // Room dependencies
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
+    // Hilt dependencies
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.hilt.android.compiler.v2511)
+
 
     // Compose dependencies
     implementation(libs.androidx.core.ktx)
