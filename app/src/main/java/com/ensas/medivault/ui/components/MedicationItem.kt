@@ -49,8 +49,8 @@ fun MedicationItem(
     // Display the medication item in a Card
     Card(
         modifier = Modifier
-            .height(138.dp).fillMaxWidth()
-            .padding(Dimensions.paddingMedium)
+            .height(138.dp)
+			.fillMaxWidth()
             .clickable { onItemClick(medication.id) }
     ) {
         Row(
@@ -76,11 +76,11 @@ fun MedicationItem(
                     .fillMaxHeight()
                     .padding(
                         start = Dimensions.paddingLarge,
-                        top = Dimensions.paddingMedium,
-                        bottom = Dimensions.paddingMedium,
+                        top = Dimensions.paddingLarge,
+                        bottom = Dimensions.paddingLarge,
                         end = Dimensions.paddingMedium
                     ),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceAround
             ) {
                 // Medication name
                 Text(
@@ -107,7 +107,7 @@ fun MedicationItem(
                 if (quantity == 0) {
                     MButton(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .width(200.dp)
                             .height(40.dp)
                             .padding(Dimensions.paddingSmall),
                         onClick = {
@@ -132,7 +132,9 @@ fun MedicationItem(
                     }
                 } else {
                     QuantityChooser(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(40.dp),
                         quantity = quantity,
                         onIncrease = { cartViewModel.updateQuantity(medication.id, quantity + 1) },
                         onDecrease = {
@@ -149,7 +151,6 @@ fun MedicationItem(
     }
 }
 
-// Preview of the MedicationItem
 @Preview(showBackground = true)
 @Composable
 fun MedicationItemPreview() {
@@ -159,10 +160,29 @@ fun MedicationItemPreview() {
             name = "Paracetamol",
             description = "This is a description of Paracetamol",
             contents = "500mg, 16 tablets",
-            usageInstructions = "",
-            manufacturer = "",
         ),
         cartViewModel = viewModel(),
+        onItemClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MedicationItemAddedPreview() {
+    val medication = Medication(
+        id = "123", price = 10.0,
+        name = "Paracetamol",
+        description = "This is a description of Paracetamol",
+        contents = "500mg, 16 tablets",
+    )
+    val cartViewModel = viewModel<CartViewModel>().apply {
+        addToCart(medication)
+        addToCart(medication)
+    }
+
+    MedicationItem(
+        medication = medication,
+        cartViewModel = cartViewModel,
         onItemClick = {}
     )
 }

@@ -45,6 +45,7 @@ android {
 
 dependencies {
     // App dependencies
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.coil.compose) // Coil for loading images
     implementation(libs.coil.network.okhttp) // Coil's OkHttp extension for network loading
     implementation(libs.androidx.navigation.compose) // Navigation for Jetpack Compose

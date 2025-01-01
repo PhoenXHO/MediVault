@@ -1,0 +1,53 @@
+package com.ensas.medivault.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.ui.components.MScaffold
+import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.viewmodel.CartViewModel
+
+@Composable
+fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel) {
+    MScaffold(
+        navController = navController,
+        title = "Checkout",
+        backArrow = true,
+        contentModifier = Modifier.padding(horizontal = Dimensions.paddingLarge),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Proceed with your payment details.")
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(onClick = { /* Handle checkout action */ }) {
+                Text("Confirm Purchase")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CheckoutScreenPreview() {
+    CheckoutScreen(
+        navController = rememberNavController(),
+        cartViewModel = CartViewModel()
+    )
+}

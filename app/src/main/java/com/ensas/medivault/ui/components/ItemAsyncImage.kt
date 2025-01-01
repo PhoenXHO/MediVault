@@ -21,7 +21,8 @@ import coil3.util.DebugLogger
 fun ItemAsyncImage(
     imageUrl: String,
     contentDescription: String,
-    modifier: Modifier? = null
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Crop
 ) {
     val imageLoader = LocalContext.current.imageLoader.newBuilder()
         .logger(DebugLogger())
@@ -33,9 +34,8 @@ fun ItemAsyncImage(
             .data(imageUrl)
             .crossfade(true)
             .build(),
-        modifier = modifier ?: Modifier // Set the size of the image
-            .fillMaxSize(),
-        contentScale = ContentScale.Crop,
+        modifier = modifier.fillMaxSize(), // Set the size of the image
+        contentScale = contentScale,
         imageLoader = imageLoader,
         loading = {
             Box(

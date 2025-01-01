@@ -4,8 +4,8 @@ import com.ensas.medivault.data.dao.MedicationDao
 import com.ensas.medivault.data.model.Medication
 import javax.inject.Inject
 
-class MedicationRepository @Inject constructor(private val medicationDao: MedicationDao) {
-    suspend fun getMedications(): List<Medication> {
+open class MedicationRepository @Inject constructor(private val medicationDao: MedicationDao) {
+    open suspend fun getMedications(): List<Medication> {
         return medicationDao.getAllMedications()
     }
 

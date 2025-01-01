@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MButton(
+    enabled: Boolean = true,
     onClick: () -> Unit,
     modifier: Modifier? = null,
     content: @Composable () -> Unit
@@ -23,7 +24,8 @@ fun MButton(
         colors = ButtonDefaults.buttonColors(),
         modifier = modifier ?: Modifier
             .fillMaxWidth()
-            .height(40.dp)
+            .height(40.dp),
+        enabled = enabled
     ) {
         content()
     }
