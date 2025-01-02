@@ -74,6 +74,7 @@ fun MedicationItem(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
+                    .width(160.dp)
                     .padding(
                         start = Dimensions.paddingLarge,
                         top = Dimensions.paddingLarge,

@@ -19,13 +19,14 @@ import com.ensas.medivault.ui.navigation.Screen
 @Composable
 fun MainScaffold(
     navController: NavController,
+    title: String = "MediVault",
     contentModifier: Modifier = Modifier,
     bottomBar: @Composable () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     MScaffold(
         navController = navController,
-        title = "MediVault",
+        title = title,
         content = content,
         contentModifier = contentModifier,
         bottomBar = bottomBar,

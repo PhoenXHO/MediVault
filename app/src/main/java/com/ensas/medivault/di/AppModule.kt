@@ -1,10 +1,11 @@
 package com.ensas.medivault.di
 
 import android.content.Context
-import androidx.room.Room
+import com.ensas.medivault.data.UserPreferences
 import com.ensas.medivault.data.dao.MedicationDao
 import com.ensas.medivault.data.database.AppDatabase
 import com.ensas.medivault.data.repository.MedicationRepository
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,25 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+	@Provides
+	@Singleton
+	fun provideUserPreferences(@ApplicationContext context: Context): UserPreferences {
+		return UserPreferences(context)
+	}
+
+	@Provides
+	@Singleton
+	fun provideFirebaseAuth(): FirebaseAuth {
+		return FirebaseAuth.getInstance()
+	}
+
+	@Provides
+	@Singleton
+	fun provideCoroutineScope(): CoroutineScope {
+		return CoroutineScope(SupervisorJob())
+	}
+
+
 	@Provides
 	@Singleton
 	fun provideDatabase(@ApplicationContext context: Context): AppDatabase {

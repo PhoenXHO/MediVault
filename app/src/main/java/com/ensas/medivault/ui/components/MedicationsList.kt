@@ -14,8 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.data.model.Medication
+import com.ensas.medivault.data.repository.FakeRepository
 import com.ensas.medivault.ui.navigation.Screen
-import com.ensas.medivault.ui.screens.FakeRepository
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.MedicationsViewModel

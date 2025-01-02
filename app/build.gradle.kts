@@ -20,6 +20,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["STARTUP_TRACE_ENABLED"] = true
     }
 
     buildTypes {
@@ -53,12 +55,28 @@ dependencies {
 
     // Room dependencies
     implementation(libs.androidx.room.ktx)
+    implementation(libs.googleid)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.storage)
+    //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)
 
     // Hilt dependencies
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler.v2511)
+
+    // Firebase dependencies
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.core)
+    implementation(libs.play.services.auth)
+
+    // Credential Manager dependencies
+    implementation(libs.androidx.credentials)
+
+    // DataStore dependencies
+    implementation(libs.androidx.datastore.preferences)
 
 
     // Compose dependencies
@@ -78,3 +96,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+apply(plugin = "com.google.gms.google-services")

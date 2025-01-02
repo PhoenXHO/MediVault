@@ -24,10 +24,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.data.model.SearchFilter
 import com.ensas.medivault.data.model.SortOption
+import com.ensas.medivault.data.repository.FakeRepository
 import com.ensas.medivault.ui.components.FilterBar
 import com.ensas.medivault.ui.components.FilterDialog
+import com.ensas.medivault.ui.components.MBottomBar
 import com.ensas.medivault.ui.components.MScaffold
 import com.ensas.medivault.ui.components.MedicationsList
+import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.SearchViewModel
@@ -50,6 +53,16 @@ fun SearchResultsScreen(
             IconButton(onClick = { showFilterDialog = true }) {
                 Icon(Icons.Filled.FilterList, "Edit Filters")
             }
+        },
+        bottomBar = {
+            MBottomBar(
+                navController = navController,
+                currentScreen = Screen.Home,
+                modifier = Modifier
+                    .padding(horizontal = Dimensions.paddingMedium)
+                    .padding(bottom = Dimensions.paddingLarge)
+                    .padding(bottom = Dimensions.paddingSmall),
+            )
         }
     ) {
         Column(
