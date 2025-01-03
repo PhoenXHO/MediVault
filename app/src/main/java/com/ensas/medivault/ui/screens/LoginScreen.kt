@@ -12,11 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,20 +29,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.R
 import com.ensas.medivault.auth.GoogleAuthUiClient
 import com.ensas.medivault.data.UserInfo
 import com.ensas.medivault.data.UserPreferences
 import com.ensas.medivault.ui.components.KeyboardAwareScaffold
 import com.ensas.medivault.ui.components.MButton
+import com.ensas.medivault.ui.components.MTextField
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.navigation.navigateTo
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 import kotlinx.coroutines.launch
 
@@ -83,25 +86,28 @@ fun LoginScreen(
             ) {
                 Text("Login",
                     style = Typography.titleLarge)
-                Spacer(modifier = Modifier.height(Dimensions.marginLarge))
+                Spacer(modifier = Modifier.height(Dimensions.marginExtraLarge))
 
-                OutlinedTextField(
+                MTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
+                    placeholder = "Email",
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                OutlinedTextField(
+                MTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
+                    placeholder = "Password",
                     modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation()
+                    isPassword = true
                 )
                 Spacer(modifier = Modifier.height(Dimensions.marginLarge))
 
                 MButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !isLoading, // Disable button when loading
                     onClick = {
                         val error = validateInput(email, password)
                         if (error != null) {
@@ -112,8 +118,6 @@ fun LoginScreen(
                             onLogin(email, password)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading // Disable button when loading
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
@@ -126,7 +130,6 @@ fun LoginScreen(
                     }
                     Text("Login")
                 }
-                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                 GoogleSignInButton(navController)
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
@@ -136,7 +139,7 @@ fun LoginScreen(
                     modifier = Modifier.clickable {
                         navigateTo(navController, Screen.Registration, clearStack = true)
                     },
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.End
                 )
             }
@@ -185,6 +188,7 @@ fun GoogleSignInButton(navController: NavController) {
     }
 
     MButton(
+        modifier = Modifier.fillMaxWidth(),
         onClick = {
             GoogleAuthUiClient.signInWithGoogle(
                 context, scope, launcher,
@@ -203,19 +207,46 @@ fun GoogleSignInButton(navController: NavController) {
                 }
             )
         },
-        modifier = Modifier.fillMaxWidth()
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary
+        )
     ) {
-        Text("Sign in with Google")
+        Icon(
+            painter = painterResource(R.drawable.ic_google),
+            contentDescription = "Google",
+            modifier = Modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.scrim
+        )
+        Spacer(modifier = Modifier.width(Dimensions.marginMedium))
+        Text(
+            text = "Sign in with Google",
+            color = MaterialTheme.colorScheme.scrim
+        )
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(
-        navController = rememberNavController(),
-        authError = null,
-        onLogin = { _, _ -> },
-        isLoading = false
-    )
+    MediVaultTheme {
+        LoginScreen(
+            navController = rememberNavController(),
+            authError = null,
+            onLogin = { _, _ -> },
+            isLoading = false
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginScreenDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        LoginScreen(
+            navController = rememberNavController(),
+            authError = null,
+            onLogin = { _, _ -> },
+            isLoading = false
+        )
+    }
 }

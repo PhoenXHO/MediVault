@@ -1,18 +1,25 @@
 package com.ensas.medivault.ui.components
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 
 // Display the price with the decimal part smaller in size
 @Composable
-fun PriceText(price: Double, style: TextStyle = Typography.displayMedium) {
+fun PriceText(
+    price: Double,
+    style: TextStyle = Typography.displayMedium,
+    color: Color = MaterialTheme.colorScheme.primary,
+) {
     val priceStr = "%.2f".format(price)
     val (integerPart, decimalPart) = priceStr.split(".")
     Text(
@@ -24,13 +31,15 @@ fun PriceText(price: Double, style: TextStyle = Typography.displayMedium) {
                 append(" MAD")
             }
         },
-        style = style
+        style = style,
+        color = color,
     )
 }
 
-// Preview of the PriceText
 @Preview(showBackground = true)
 @Composable
 fun PriceTextPreview() {
-    PriceText(12.99)
+    MediVaultTheme {
+        PriceText(12.99)
+    }
 }

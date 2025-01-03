@@ -37,11 +37,13 @@ fun SectionTitle(
             contentDescription = null,
             modifier = Modifier
                 .padding(end = Dimensions.paddingSmall)
-                .size(Typography.titleSmall.fontSize.value.dp)
+                .size(Typography.titleSmall.fontSize.value.dp + 2.dp),
+            tint = MaterialTheme.colorScheme.secondary
         )
         Text(
             text = title,
-            style = Typography.titleMedium
+            style = Typography.titleMedium,
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }

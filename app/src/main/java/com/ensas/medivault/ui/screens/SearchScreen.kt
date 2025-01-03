@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,8 +40,11 @@ import com.ensas.medivault.data.repository.FakeFavoritesRepository
 import com.ensas.medivault.data.repository.FakeRepository
 import com.ensas.medivault.ui.components.MButton
 import com.ensas.medivault.ui.components.MScaffold
+import com.ensas.medivault.ui.components.MTextField
 import com.ensas.medivault.ui.navigation.Screen
+import com.ensas.medivault.ui.theme.CustomShapes
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.SearchViewModel
 
@@ -79,6 +86,10 @@ fun SearchScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 content = { Text("Search") },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary
+                )
             )
         }
     ) {
@@ -86,34 +97,39 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            OutlinedTextField(
+            MTextField(
                 value = query,
                 onValueChange = { query = it },
-                label = { Text("Search medications") },
+                label = "Search medications",
+                placeholder = "Type to search...",
                 leadingIcon = {
                     Icon(Icons.Filled.Search, contentDescription = "Search")
-                },
-                modifier = Modifier.fillMaxWidth()
+                }
             )
-
-            Spacer(modifier = Modifier.padding(Dimensions.marginMedium))
+            Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                OutlinedTextField(
+                MTextField(
                     value = minPrice,
                     onValueChange = { minPrice = it },
-                    label = { Text("Min price") },
-                    modifier = Modifier.weight(1f)
+                    label = "Min price",
+                    placeholder = "(optional)",
+                    modifier = Modifier.weight(1f),
+                    shape = CustomShapes.LeftRoundedCornerShape,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
                 Spacer(modifier = Modifier.width(Dimensions.marginMedium))
-                OutlinedTextField(
+                MTextField(
                     value = maxPrice,
                     onValueChange = { maxPrice = it },
-                    label = { Text("Max price") },
-                    modifier = Modifier.weight(1f)
+                    label = "Max price",
+                    placeholder = "(optional)",
+                    modifier = Modifier.weight(1f),
+                    shape = CustomShapes.RightRoundedCornerShape,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
             }
 
@@ -124,10 +140,9 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
-                    checked = favoritesOnly,
-                    onCheckedChange = { isChecked ->
-                        favoritesOnly = isChecked
-                    }
+//                    checked = favoritesOnly,
+                    checked = true,
+                    onCheckedChange = { favoritesOnly = it },
                 )
                 Text(text = "Favorites Only")
             }
@@ -156,15 +171,30 @@ fun SearchScreen(
     }
 }
 
-// Preview of the SearchScreen
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(
-        navController = rememberNavController(),
-        viewModel = SearchViewModel(
-            FakeRepository(),
-            FakeFavoritesRepository()
+    MediVaultTheme {
+        SearchScreen(
+            navController = rememberNavController(),
+            viewModel = SearchViewModel(
+                FakeRepository(),
+                FakeFavoritesRepository()
+            )
         )
-    )
+    }
+}
+
+@Preview
+@Composable
+fun SearchScreenDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        SearchScreen(
+            navController = rememberNavController(),
+            viewModel = SearchViewModel(
+                FakeRepository(),
+                FakeFavoritesRepository()
+            )
+        )
+    }
 }

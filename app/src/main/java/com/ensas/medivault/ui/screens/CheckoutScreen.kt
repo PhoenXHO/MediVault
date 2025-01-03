@@ -13,12 +13,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.ui.components.MButton
 import com.ensas.medivault.ui.components.MScaffold
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.viewmodel.CartViewModel
 
 @Composable
@@ -36,7 +40,13 @@ fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel) {
         ) {
             Text("Proceed with your payment details.")
             Spacer(modifier = Modifier.height(20.dp))
-            Button(onClick = { /* Handle checkout action */ }) {
+            MButton(
+                onClick = { /* Handle checkout action */ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary
+                )
+            ) {
                 Text("Confirm Purchase")
             }
         }
@@ -46,8 +56,10 @@ fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun CheckoutScreenPreview() {
-    CheckoutScreen(
-        navController = rememberNavController(),
-        cartViewModel = CartViewModel()
-    )
+    MediVaultTheme {
+        CheckoutScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel()
+        )
+    }
 }

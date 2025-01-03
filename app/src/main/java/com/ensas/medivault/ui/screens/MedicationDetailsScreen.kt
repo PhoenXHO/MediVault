@@ -17,12 +17,15 @@ import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.MedicalServices
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.WarningAmber
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,7 @@ import com.ensas.medivault.ui.components.PriceText
 import com.ensas.medivault.ui.components.QuantityChooser
 import com.ensas.medivault.ui.components.SectionTitle
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
@@ -85,11 +89,13 @@ fun MedicationDetailsScreen(
                         .padding(horizontal = Dimensions.paddingLarge)
                         .padding(bottom = Dimensions.paddingLarge)
                         .padding(bottom = Dimensions.paddingMedium),
-                    tonalElevation = 0.dp
+                    tonalElevation = 0.dp,
+                    color = Color.Transparent,
                 ) {
                     // Conditional UI for Add to cart or Quantity Chooser
                     if (quantity == 0) {
                         MButton(
+                            modifier = Modifier.height(40.dp),
                             onClick = {
                                 cartViewModel.addToCart(med)
                                 Toast.makeText(
@@ -97,10 +103,17 @@ fun MedicationDetailsScreen(
                                     "Added to cart",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                                contentColor = MaterialTheme.colorScheme.onSecondary
+                            )
                         ) { Text("Add to cart") }
                     } else {
                         QuantityChooser(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp),
                             quantity = quantity,
                             onIncrease = { cartViewModel.updateQuantity(med.id, quantity + 1) },
                             onDecrease = {
@@ -110,12 +123,11 @@ fun MedicationDetailsScreen(
                                     cartViewModel.removeFromCart(med.id)
                                 }
                             },
-                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
             }
-        ) {
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -167,6 +179,8 @@ fun MedicationDetailsScreen(
 
                     SectionTitle(title = "Side Effects", icon = Icons.Rounded.Dangerous)
                     MarkdownText(med.sideEffects)
+
+                    Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                 }
             }
         }
@@ -175,15 +189,30 @@ fun MedicationDetailsScreen(
     }
 }
 
-// Preview of the MedicationDetailsScreen
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun MedicationDetailsScreenPreview() {
-    MedicationDetailsScreen(
-        navController = rememberNavController(),
-        cartViewModel = CartViewModel(),
-        medicationId = 0,
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
-        viewModel = MedicationDetailsViewModel(FakeRepository())
-    )
+    MediVaultTheme {
+        MedicationDetailsScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel(),
+            medicationId = 0,
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            viewModel = MedicationDetailsViewModel(FakeRepository())
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MedicationDetailsScreenDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        MedicationDetailsScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel(),
+            medicationId = 0,
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            viewModel = MedicationDetailsViewModel(FakeRepository())
+        )
+    }
 }

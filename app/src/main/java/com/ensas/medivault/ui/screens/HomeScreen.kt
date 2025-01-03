@@ -1,5 +1,6 @@
 package com.ensas.medivault.ui.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import com.ensas.medivault.ui.components.MainScaffold
 import com.ensas.medivault.ui.components.MedicationsList
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.MedicationsViewModel
@@ -50,28 +52,43 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(horizontal = Dimensions.paddingMedium)
                     .padding(bottom = Dimensions.paddingLarge)
-                    .padding(bottom = Dimensions.paddingSmall),
+                    .padding(bottom = Dimensions.paddingSmall)
             )
         }
-    ) {
+    ) { paddinValues ->
         MedicationsList(
             medications = medications,
             state = state,
             navController = navController,
             cartViewModel = cartViewModel,
-            favoritesViewModel = favoritesViewModel
+            favoritesViewModel = favoritesViewModel,
+            bottomPadding = paddinValues.calculateBottomPadding()
         )
     }
 }
 
-// Preview of the MedicationsListScreen
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun MedicationsListScreenPreview() {
-    HomeScreen(
-        navController = rememberNavController(),
-        cartViewModel = CartViewModel(),
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
-        viewModel = MedicationsViewModel(FakeRepository())
-    )
+    MediVaultTheme {
+        HomeScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel(),
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            viewModel = MedicationsViewModel(FakeRepository())
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MedicationsListScreenDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        HomeScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel(),
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            viewModel = MedicationsViewModel(FakeRepository())
+        )
+    }
 }

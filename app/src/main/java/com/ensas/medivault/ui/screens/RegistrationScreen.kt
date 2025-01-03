@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,9 +31,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.ui.components.KeyboardAwareScaffold
 import com.ensas.medivault.ui.components.MButton
+import com.ensas.medivault.ui.components.MTextField
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.navigation.navigateTo
+import com.ensas.medivault.ui.theme.CustomShapes
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 import kotlinx.coroutines.launch
 
@@ -79,45 +78,50 @@ fun RegistrationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("Register", style = Typography.titleLarge)
-                Spacer(modifier = Modifier.height(Dimensions.marginLarge))
+                Spacer(modifier = Modifier.height(Dimensions.marginExtraLarge))
 
                 Row {
-                    OutlinedTextField(
+                    MTextField(
                         value = firstName,
                         onValueChange = { firstName = it },
-                        label = { Text("First Name") },
-                        modifier = Modifier.weight(1f)
+                        placeholder = "First Name",
+                        modifier = Modifier.weight(1f),
+                        shape = CustomShapes.LeftRoundedCornerShape
                     )
                     Spacer(modifier = Modifier.width(Dimensions.marginMedium))
 
-                    OutlinedTextField(
+                    MTextField(
                         value = lastName,
                         onValueChange = { lastName = it },
-                        label = { Text("Last Name") },
-                        modifier = Modifier.weight(1f)
+                        placeholder = "Last Name",
+                        modifier = Modifier.weight(1f),
+                        shape = CustomShapes.RightRoundedCornerShape
                     )
                 }
+                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                OutlinedTextField(
+                MTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
+                    placeholder = "Email",
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                OutlinedTextField(
+                MTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
+                    placeholder = "Password",
+                    isPassword = true,
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                OutlinedTextField(
+                MTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text("Confirm Password") },
-                    visualTransformation = PasswordVisualTransformation(),
+                    placeholder = "Confirm Password",
+                    isPassword = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(Dimensions.marginLarge))
@@ -148,7 +152,6 @@ fun RegistrationScreen(
                     }
                     Text("Register")
                 }
-                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                 GoogleSignInButton(navController)
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
@@ -158,7 +161,7 @@ fun RegistrationScreen(
                     modifier = Modifier.clickable {
                         navigateTo(navController, Screen.Login, clearStack = true)
                     },
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center
                 )
             }
@@ -196,13 +199,28 @@ private fun validateInput(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun RegistrationScreenPreview() {
-    RegistrationScreen(
-        navController = rememberNavController(),
-        authError = "test",
-        onRegister = { _, _, _, _ -> },
-        isLoading = false
-    )
+    MediVaultTheme {
+        RegistrationScreen(
+            navController = rememberNavController(),
+            authError = "test",
+            onRegister = { _, _, _, _ -> },
+            isLoading = false
+        )
+    }
+}
+
+@Preview
+@Composable
+fun RegistrationScreenDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        RegistrationScreen(
+            navController = rememberNavController(),
+            authError = "test",
+            onRegister = { _, _, _, _ -> },
+            isLoading = false
+        )
+    }
 }

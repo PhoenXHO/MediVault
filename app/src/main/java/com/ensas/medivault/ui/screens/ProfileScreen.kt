@@ -1,6 +1,5 @@
 package com.ensas.medivault.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.ensas.medivault.data.UserInfo
@@ -38,14 +37,16 @@ import com.ensas.medivault.ui.components.MButton
 import com.ensas.medivault.ui.components.MainScaffold
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
     currentUser: UserInfo?,
+    showConfirmationDialog: Boolean = false,
     onLogout: () -> Unit
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(showConfirmationDialog) }
 
     MainScaffold(
         navController = navController,
@@ -109,7 +110,13 @@ fun ProfileScreen(
                 Text(text = user.email, style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(24.dp))
 
-                MButton(onClick = { showDialog = true }) {
+                MButton(
+                    onClick = { showDialog = true },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
+                    )
+                ) {
                     Text("Logout")
                 }
             } ?: run {
@@ -128,10 +135,12 @@ fun ProfileScreen(
                     onClick = {
                         onLogout()
                         showDialog = false
-                    }
-                ) {
-                    Text("Logout")
-                }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
+                    )
+                ) { Text("Logout") }
             },
             dismissButton = {
                 MButton(onClick = { showDialog = false }) {
@@ -142,15 +151,64 @@ fun ProfileScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(
-        navController = rememberNavController(),
-        currentUser = UserInfo(
-            displayName = "John Doe",
-            email = "john.doe@example.com",
-        ),
-        onLogout = {}
-    )
+    MediVaultTheme {
+        ProfileScreen(
+            navController = rememberNavController(),
+            currentUser = UserInfo(
+                displayName = "John Doe",
+                email = "john.doe@example.com",
+            ),
+            onLogout = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ProfileScreenDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        ProfileScreen(
+            navController = rememberNavController(),
+            currentUser = UserInfo(
+                displayName = "John Doe",
+                email = "john.doe@example.com",
+            ),
+            onLogout = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ProfileScreenShowDialogPreview() {
+    MediVaultTheme {
+        ProfileScreen(
+            navController = rememberNavController(),
+            currentUser = UserInfo(
+                displayName = "John Doe",
+                email = "john.doe@example.com",
+            ),
+            showConfirmationDialog = true,
+            onLogout = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ProfileScreenShowDialogDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        ProfileScreen(
+            navController = rememberNavController(),
+            currentUser = UserInfo(
+                displayName = "John Doe",
+                email = "john.doe@example.com",
+            ),
+            showConfirmationDialog = true,
+            onLogout = {}
+        )
+    }
 }

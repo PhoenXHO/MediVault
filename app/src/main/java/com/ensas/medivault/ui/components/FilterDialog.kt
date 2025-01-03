@@ -2,6 +2,8 @@ package com.ensas.medivault.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,7 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ensas.medivault.data.model.SearchFilter
 import com.ensas.medivault.data.model.SortOption
+import com.ensas.medivault.ui.theme.CustomShapes
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 
 @Composable
 fun FilterDialog(
@@ -31,11 +35,13 @@ fun FilterDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 // Search Query
-                OutlinedTextField(
+                MTextField(
                     value = query,
                     onValueChange = { query = it },
-                    label = { Text("Search Query") },
-                    modifier = Modifier.fillMaxWidth()
+                    placeholder = "Search query",
+                    leadingIcon = {
+                        Icon(Icons.Filled.Search, contentDescription = "Search")
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
@@ -45,20 +51,22 @@ fun FilterDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    OutlinedTextField(
+                    MTextField(
                         value = minPrice,
                         onValueChange = { minPrice = it },
-                        label = { Text("Min Price") },
+                        placeholder = "Min price",
+                        modifier = Modifier.weight(1f),
+                        shape = CustomShapes.LeftRoundedCornerShape,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.weight(1f)
                     )
-                    Spacer(modifier = Modifier.width(Dimensions.marginSmall))
-                    OutlinedTextField(
+                    Spacer(modifier = Modifier.width(Dimensions.marginMedium))
+                    MTextField(
                         value = maxPrice,
                         onValueChange = { maxPrice = it },
-                        label = { Text("Max Price") },
+                        placeholder = "Max price",
+                        modifier = Modifier.weight(1f),
+                        shape = CustomShapes.RightRoundedCornerShape,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -71,7 +79,7 @@ fun FilterDialog(
                 ) {
                     Checkbox(
                         checked = favoritesOnly,
-                        onCheckedChange = { favoritesOnly = it }
+                        onCheckedChange = { favoritesOnly = it },
                     )
                     Text(text = "Favorites Only")
                 }
@@ -120,13 +128,28 @@ fun FilterDialog(
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun FilterDialogPreview() {
     var filter by remember { mutableStateOf(SearchFilter()) }
-    FilterDialog(
-        currentFilter = filter,
-        onApplyFilters = { newFilter -> filter = newFilter },
-        onDismiss = { }
-    )
+    MediVaultTheme {
+        FilterDialog(
+            currentFilter = filter,
+            onApplyFilters = { newFilter -> filter = newFilter },
+            onDismiss = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun FilterDialogDarkPreview() {
+    var filter by remember { mutableStateOf(SearchFilter()) }
+    MediVaultTheme(darkTheme = true) {
+        FilterDialog(
+            currentFilter = filter,
+            onApplyFilters = { newFilter -> filter = newFilter },
+            onDismiss = { }
+        )
+    }
 }

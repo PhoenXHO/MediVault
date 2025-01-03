@@ -1,12 +1,15 @@
 package com.ensas.medivault.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -18,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.navigation.navigateTo
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Shapes
 
 @Composable
@@ -41,10 +46,14 @@ fun MBottomBar(
     modifier: Modifier = Modifier
 ) {
     Card(
-        shape = Shapes.medium,
+        shape = Shapes.extraLarge,
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
     ) {
         Row(
             modifier = Modifier
@@ -55,7 +64,7 @@ fun MBottomBar(
         ) {
             IconButton(
                 onClick = { navigateTo(navController, Screen.Home, currentScreen) },
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(72.dp)
             ) {
                 IconWithText(
                     icon = Icons.Outlined.Home,
@@ -66,7 +75,7 @@ fun MBottomBar(
             }
             IconButton(
                 onClick = { navigateTo(navController, Screen.Favorites, currentScreen) },
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(72.dp)
             ) {
                 IconWithText(
                     icon = Icons.Outlined.FavoriteBorder,
@@ -77,7 +86,7 @@ fun MBottomBar(
             }
             IconButton(
                 onClick = { navigateTo(navController, Screen.Profile, currentScreen) },
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(72.dp)
             ) {
                 IconWithText(
                     icon = Icons.Outlined.PersonOutline,
@@ -105,14 +114,24 @@ fun IconWithText(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.height(48.dp)
+        verticalArrangement = Arrangement.Center
     ) {
         if (isSelected) {
-            Icon(
-                imageVector = altIcon,
-                contentDescription = text
-            )
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    )
+                    .padding(Dimensions.paddingSmall),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = altIcon,
+                    contentDescription = text
+                )
+            }
         } else {
             Icon(
                 imageVector = icon,
@@ -127,22 +146,26 @@ fun IconWithText(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun FloatingBottomBarPreview() {
-    MBottomBar(
-        navController = rememberNavController(),
-        currentScreen = Screen.Home
-    )
+    MediVaultTheme {
+        MBottomBar(
+            navController = rememberNavController(),
+            currentScreen = Screen.Home
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun IconWithTextPreview() {
-    IconWithText(
-        icon = Icons.Outlined.Home,
-        altIcon = Icons.Default.Home,
-        text = "Home",
-        isSelected = true
-    )
+    MediVaultTheme {
+        IconWithText(
+            icon = Icons.Outlined.Home,
+            altIcon = Icons.Default.Home,
+            text = "Home",
+            isSelected = true
+        )
+    }
 }

@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,6 +36,7 @@ import com.ensas.medivault.data.model.Medication
 import com.ensas.medivault.data.repository.FakeFavoritesRepository
 import com.ensas.medivault.ui.screens.FavoriteButton
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
@@ -41,6 +44,7 @@ import com.ensas.medivault.viewmodel.FavoritesViewModel
 // To define the layout of a single medication item
 @Composable
 fun MedicationItem(
+    modifier: Modifier = Modifier,
     medication: Medication,
     cartViewModel: CartViewModel,
     favoritesViewModel: FavoritesViewModel,
@@ -60,10 +64,14 @@ fun MedicationItem(
 
     // Display the medication item in a Card
     Card(
-        modifier = Modifier
+        modifier = modifier
             .height(138.dp)
 			.fillMaxWidth()
-            .clickable { onItemClick(medication.id) }
+            .clickable { onItemClick(medication.id) },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        shape = MaterialTheme.shapes.large,
     ) {
         Row(
             modifier = Modifier
@@ -117,15 +125,19 @@ fun MedicationItem(
             }
 
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = Dimensions.paddingSmall,
+                        bottom = Dimensions.paddingSmall,
+                        end = Dimensions.paddingSmall,
+                    ),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.End
             ) {
                 // Heart icon for favorites
                 FavoriteButton(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .offset(x = (-8).dp, y = 8.dp),
+                    modifier = Modifier.size(24.dp),
                     isFavorite = isFavorite,
                     addToFavorites = { favoritesViewModel.addToFavorites(medicationId) },
                     removeFromFavorites = { favoritesViewModel.removeFromFavorites(medicationId) }
@@ -135,9 +147,8 @@ fun MedicationItem(
                 if (quantity == 0) {
                     MButton(
                         modifier = Modifier
-                            .width(200.dp)
-                            .height(40.dp)
-                            .padding(Dimensions.paddingSmall),
+                            .width(240.dp)
+                            .height(40.dp),
                         onClick = {
                             isLoading = true
                             cartViewModel.addToCart(medication)
@@ -147,21 +158,25 @@ fun MedicationItem(
                                 "${medication.name} added to cart",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
+                        )
                     ) {
                         if (isLoading) {
                             CircularProgressIndicator()
                         } else {
                             Text(
                                 text = "Add",
-                                style = Typography.labelSmall
+                                style = Typography.bodySmall
                             )
                         }
                     }
                 } else {
                     QuantityChooser(
                         modifier = Modifier
-                            .width(200.dp)
+                            .width(240.dp)
                             .height(40.dp),
                         quantity = quantity,
                         onIncrease = { cartViewModel.updateQuantity(medication.id, quantity + 1) },
@@ -179,27 +194,47 @@ fun MedicationItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun MedicationItemPreview() {
-    MedicationItem(
-        medication = Medication(
-            id = 1, price = 10.0,
-            name = "Paracetamol",
-            description = "This is a description of Paracetamol",
-            contents = "500mg, 16 tablets",
-        ),
-        cartViewModel = viewModel(),
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
-        onItemClick = {},
-    )
+    MediVaultTheme {
+        MedicationItem(
+            medication = Medication(
+                id = 1, price = 10.0,
+                name = "Paracetamol",
+                description = "This is a description of Paracetamol",
+                contents = "500mg, 16 tablets",
+            ),
+            cartViewModel = viewModel(),
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            onItemClick = {},
+        )
+    }
 }
 
-@Preview(showBackground = true)
+@Preview
+@Composable
+fun MedicationItemDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        MedicationItem(
+            medication = Medication(
+                id = 1, price = 10.0,
+                name = "Paracetamol",
+                description = "This is a description of Paracetamol",
+                contents = "500mg, 16 tablets",
+            ),
+            cartViewModel = viewModel(),
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            onItemClick = {},
+        )
+    }
+}
+
+@Preview
 @Composable
 fun MedicationItemAddedPreview() {
     val medication = Medication(
-        id = 3, price = 10.0,
+        id = 2, price = 10.0,
         name = "Paracetamol 500mg 20 Tablets",
         description = "This is a description of Paracetamol",
         contents = "500mg, 16 tablets",
@@ -209,10 +244,36 @@ fun MedicationItemAddedPreview() {
         addToCart(medication)
     }
 
-    MedicationItem(
-        medication = medication,
-        cartViewModel = cartViewModel,
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
-        onItemClick = {},
+    MediVaultTheme {
+        MedicationItem(
+            medication = medication,
+            cartViewModel = cartViewModel,
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            onItemClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MedicationItemAddedDarkPreview() {
+    val medication = Medication(
+        id = 2, price = 10.0,
+        name = "Paracetamol 500mg 20 Tablets",
+        description = "This is a description of Paracetamol",
+        contents = "500mg, 16 tablets",
     )
+    val cartViewModel = viewModel<CartViewModel>().apply {
+        addToCart(medication)
+        addToCart(medication)
+    }
+
+    MediVaultTheme(darkTheme = true) {
+        MedicationItem(
+            medication = medication,
+            cartViewModel = cartViewModel,
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
+            onItemClick = {},
+        )
+    }
 }

@@ -1,63 +1,113 @@
 
 package com.ensas.medivault.ui.components
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 
 @Composable
 fun QuantityChooser(
     quantity: Int,
+    stylized: Boolean = true,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+    Surface(
+        color = if (stylized) MaterialTheme.colorScheme.tertiary
+            else Color.Transparent,
+        shape = MaterialTheme.shapes.extraLarge,
+        modifier = if (stylized) Modifier
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onTertiary,
+                shape = MaterialTheme.shapes.extraLarge
+            )
+            else Modifier
     ) {
-        IconButton(onClick = onDecrease) {
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = "Decrease quantity"
-            )
-        }
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onDecrease) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "Decrease quantity"
+                )
+            }
 
-        Text(
-            text = "$quantity",
-            modifier = Modifier.width(20.dp),
-            textAlign = TextAlign.Center,
-            style = Typography.bodySmall
-        )
-
-        IconButton(onClick = onIncrease) {
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowUp,
-                contentDescription = "Increase quantity"
+            Text(
+                text = "$quantity",
+                modifier = Modifier.width(20.dp),
+                textAlign = TextAlign.Center,
+                style = Typography.bodySmall
             )
+
+            IconButton(onClick = onIncrease) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Filled.KeyboardArrowUp,
+                    contentDescription = "Increase quantity"
+                )
+            }
         }
     }
 }
 
-// Preview of the QuantityChooser
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun QuantityChooserPreview() {
-    QuantityChooser(
-        quantity = 1,
-        onIncrease = { /*TODO*/ },
-        onDecrease = { /*TODO*/ }
-    )
+    MediVaultTheme {
+        QuantityChooser(
+            quantity = 1,
+            onIncrease = { },
+            onDecrease = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun QuantityChooserDarkPreview() {
+    MediVaultTheme(darkTheme = true) {
+        QuantityChooser(
+            quantity = 1,
+            onIncrease = { },
+            onDecrease = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun QuantityChooserNoStylePreview() {
+    MediVaultTheme {
+        QuantityChooser(
+            quantity = 1,
+            stylized = false,
+            onIncrease = { },
+            onDecrease = { }
+        )
+    }
 }

@@ -33,6 +33,7 @@ import com.ensas.medivault.ui.components.MScaffold
 import com.ensas.medivault.ui.components.MedicationsList
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.SearchViewModel
@@ -67,7 +68,7 @@ fun SearchResultsScreen(
                     .padding(bottom = Dimensions.paddingSmall),
             )
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -102,7 +103,8 @@ fun SearchResultsScreen(
                     state = rememberLazyListState(),
                     navController = navController,
                     cartViewModel = cartViewModel,
-                    favoritesViewModel = favoritesViewModel
+                    favoritesViewModel = favoritesViewModel,
+                    bottomPadding = paddingValues.calculateBottomPadding()
                 )
             }
 
@@ -121,7 +123,7 @@ fun SearchResultsScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun SearchResultsScreenPreview() {
     val searchViewModel = SearchViewModel(
@@ -136,10 +138,39 @@ fun SearchResultsScreenPreview() {
             sortBy = SortOption.PRICE_DESC
         )
     )
-    SearchResultsScreen(
-        navController = rememberNavController(),
-        cartViewModel = CartViewModel(),
-        viewModel = searchViewModel,
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
+
+    MediVaultTheme {
+        SearchResultsScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel(),
+            viewModel = searchViewModel,
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SearchResultsScreenDarkPreview() {
+    val searchViewModel = SearchViewModel(
+        FakeRepository(),
+        FakeFavoritesRepository()
     )
+    searchViewModel.setFilters(
+        SearchFilter(
+            query = "Med",
+            minPrice = 10.0,
+            maxPrice = 50.0,
+            sortBy = SortOption.PRICE_DESC
+        )
+    )
+
+    MediVaultTheme(darkTheme = true) {
+        SearchResultsScreen(
+            navController = rememberNavController(),
+            cartViewModel = CartViewModel(),
+            viewModel = searchViewModel,
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
+        )
+    }
 }

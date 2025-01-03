@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ensas.medivault.data.model.Medication
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.CartViewModel
 
@@ -39,10 +41,12 @@ fun CartItemRow(item: Medication, cartViewModel: CartViewModel) {
         }
         PriceText(
             price = item.totalPrice,
-            style = Typography.labelLarge
+            style = Typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
         )
         QuantityChooser(
             quantity = item.quantity,
+            stylized = false,
             onIncrease = { cartViewModel.updateQuantity(item.id, item.quantity + 1) },
             onDecrease = {
                 if (item.quantity > 1) {
@@ -58,14 +62,16 @@ fun CartItemRow(item: Medication, cartViewModel: CartViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun CartItemRowPreview() {
-    CartItemRow(
-        item = Medication(
-            id = 1,
-            name = "Paracetamol",
-            price = 10.0,
-            quantity = 2,
-            contents = "500mg, 10 tablets",
-        ),
-        cartViewModel = CartViewModel()
-    )
+    MediVaultTheme {
+        CartItemRow(
+            item = Medication(
+                id = 1,
+                name = "Paracetamol",
+                price = 10.0,
+                quantity = 2,
+                contents = "500mg, 10 tablets",
+            ),
+            cartViewModel = CartViewModel()
+        )
+    }
 }

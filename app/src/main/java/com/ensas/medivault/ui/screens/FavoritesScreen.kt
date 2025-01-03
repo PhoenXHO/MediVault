@@ -22,6 +22,7 @@ import com.ensas.medivault.ui.components.MBottomBar
 import com.ensas.medivault.ui.components.MedicationsList
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
+import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.MedicationsViewModel
@@ -83,11 +84,10 @@ fun FavoriteButton(
     ) {
         Icon(
             imageVector = if (isFavorite) Icons.Filled.Favorite
-            else Icons.Outlined.FavoriteBorder,
+                else Icons.Outlined.FavoriteBorder,
             contentDescription = if (isFavorite) "Remove from favorites"
-            else "Add to favorites",
-            tint = if (isFavorite) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.onSurface
+                else "Add to favorites",
+            tint = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -95,10 +95,24 @@ fun FavoriteButton(
 @Preview(showBackground = true)
 @Composable
 fun FavoritesScreenPreview() {
-    FavoritesScreen(
-        navController = androidx.navigation.compose.rememberNavController(),
-        cartViewModel = CartViewModel(),
-        medicationsViewModel = MedicationsViewModel(FakeRepository()),
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
-    )
+    MediVaultTheme {
+        FavoritesScreen(
+            navController = androidx.navigation.compose.rememberNavController(),
+            cartViewModel = CartViewModel(),
+            medicationsViewModel = MedicationsViewModel(FakeRepository()),
+            favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteButtonPreview() {
+    MediVaultTheme {
+        FavoriteButton(
+            isFavorite = false,
+            addToFavorites = {},
+            removeFromFavorites = {}
+        )
+    }
 }
