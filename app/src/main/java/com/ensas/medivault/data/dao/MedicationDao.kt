@@ -13,7 +13,7 @@ interface MedicationDao {
     suspend fun getAllMedications(): List<Medication>
 
     @Query("SELECT * FROM medications WHERE id = :medicationId LIMIT 1")
-    suspend fun getMedicationById(medicationId: String): Medication?
+    suspend fun getMedicationById(medicationId: Int): Medication?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedications(medications: List<Medication>)
@@ -28,7 +28,7 @@ public class FakeDao : MedicationDao {
         return InitialData.medications
     }
 
-    override suspend fun getMedicationById(medicationId: String): Medication? {
+    override suspend fun getMedicationById(medicationId: Int): Medication? {
         return InitialData.medications.find { it.id == medicationId }
     }
 

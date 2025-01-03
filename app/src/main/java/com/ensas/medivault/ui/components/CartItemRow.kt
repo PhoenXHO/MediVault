@@ -60,7 +60,7 @@ fun CartItemRow(item: Medication, cartViewModel: CartViewModel) {
 fun CartItemRowPreview() {
     CartItemRow(
         item = Medication(
-            id = "1",
+            id = 1,
             name = "Paracetamol",
             price = 10.0,
             quantity = 2,

@@ -29,27 +29,30 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.data.repository.FakeFavoritesRepository
 import com.ensas.medivault.data.repository.FakeRepository
-import com.ensas.medivault.ui.components.BackButton
 import com.ensas.medivault.ui.components.ItemAsyncImage
 import com.ensas.medivault.ui.components.MButton
-import com.ensas.medivault.ui.components.MainScaffold
+import com.ensas.medivault.ui.components.MScaffold
 import com.ensas.medivault.ui.components.PriceText
 import com.ensas.medivault.ui.components.QuantityChooser
 import com.ensas.medivault.ui.components.SectionTitle
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.CartViewModel
+import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.MedicationDetailsViewModel
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun MedicationDetailsScreen(
     navController: NavController,
-    medicationId: String?,
-    cartViewModel: CartViewModel = hiltViewModel(),
+    medicationId: Int,
+    cartViewModel: CartViewModel,
+    favoritesViewModel: FavoritesViewModel,
     viewModel: MedicationDetailsViewModel = hiltViewModel()
 ) {
-    medicationId?.let {
+    medicationId.let {
         viewModel.fetchMedicationDetails(it)
     }
 
@@ -58,16 +61,29 @@ fun MedicationDetailsScreen(
     val currentItem = cartItems.find { it.id == medicationId }
     val quantity = currentItem?.quantity ?: 0
 
+    val favorites by favoritesViewModel.favorites.collectAsState()
+    val isFavorite = medicationId.let { favorites.contains(it) }
+
     medication?.let { med ->
-        MainScaffold(
+        MScaffold(
             navController = navController,
-            contentModifier = Modifier.padding(horizontal = Dimensions.paddingLarge),
+            title = "Medication Details",
+            backArrow = true,
+            contentModifier = Modifier.padding(Dimensions.paddingLarge),
+            actions = {
+                FavoriteButton(
+                    isFavorite = isFavorite,
+                    addToFavorites = { favoritesViewModel.addToFavorites(medicationId) },
+                    removeFromFavorites = { favoritesViewModel.removeFromFavorites(medicationId) }
+                )
+            },
             bottomBar = {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
                         .imePadding()
-                        .padding(Dimensions.paddingLarge)
+                        .padding(horizontal = Dimensions.paddingLarge)
+                        .padding(bottom = Dimensions.paddingLarge)
                         .padding(bottom = Dimensions.paddingMedium),
                     tonalElevation = 0.dp
                 ) {
@@ -100,7 +116,6 @@ fun MedicationDetailsScreen(
                 }
             }
         ) {
-            BackButton(navController)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -131,27 +146,27 @@ fun MedicationDetailsScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     SectionTitle(title = "Description", icon = Icons.Rounded.Description)
-                    Text(text = med.description)
+                    MarkdownText(med.description)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                     SectionTitle(title = "Important Information", icon = Icons.Outlined.Info)
-                    Text(text = "Do not take this medication if you are allergic to any of its ingredients")
+                    MarkdownText(med.importantInfo)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                     SectionTitle(title = "Before Use", icon = Icons.Rounded.WarningAmber)
-                    Text(text = "Consult your doctor before using this medication")
+                    MarkdownText(med.precautions)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                    SectionTitle(title = "Usage Instructions", icon = Icons.Rounded.MedicalServices)
-                    Text(text = med.usageInstructions)
+                    SectionTitle(title = "Uses", icon = Icons.Rounded.MedicalServices)
+                    MarkdownText(med.uses)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                     SectionTitle(title = "Dosage", icon = Icons.Rounded.Schedule)
-                    Text(text = "Always take the prescribed dosage")
+                    MarkdownText(med.dosage)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                     SectionTitle(title = "Side Effects", icon = Icons.Rounded.Dangerous)
-                    Text(text = "Side effects may include drowsiness, nausea, and headache")
+                    MarkdownText(med.sideEffects)
                 }
             }
         }
@@ -167,7 +182,8 @@ fun MedicationDetailsScreenPreview() {
     MedicationDetailsScreen(
         navController = rememberNavController(),
         cartViewModel = CartViewModel(),
-        medicationId = "1",
+        medicationId = 0,
+        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
         viewModel = MedicationDetailsViewModel(FakeRepository())
     )
 }

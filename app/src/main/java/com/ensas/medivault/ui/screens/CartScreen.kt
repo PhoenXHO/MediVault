@@ -106,14 +106,14 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
 fun CartScreenPreview() {
     val cartViewModel = viewModel<CartViewModel>()
     cartViewModel.addToCart(Medication(
-        id = 1.toString(),
+        id = 1,
         name = "Medication 1",
         contents = "Contents 1",
         price = 10.0,
         quantity = 1,
     ))
     cartViewModel.addToCart(Medication(
-        id = 2.toString(),
+        id = 2,
         name = "Medication 2",
         contents = "Contents 2",
         price = 20.0,

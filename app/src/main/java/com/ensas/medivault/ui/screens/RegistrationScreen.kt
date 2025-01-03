@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -28,10 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ensas.medivault.ui.components.KeyboardAwareScaffold
 import com.ensas.medivault.ui.components.MButton
 import com.ensas.medivault.ui.navigation.Screen
+import com.ensas.medivault.ui.navigation.navigateTo
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.ui.theme.Typography
 import kotlinx.coroutines.launch
@@ -40,7 +45,9 @@ import kotlinx.coroutines.launch
 fun RegistrationScreen(
     navController: NavController,
     authError: String?,
-    onRegister: (String, String, String, String) -> Unit
+    onAuthErrorShown: () -> Unit = {},
+    onRegister: (String, String, String, String) -> Unit,
+    isLoading: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -53,11 +60,12 @@ fun RegistrationScreen(
     LaunchedEffect(authError) {
         authError?.let {
             snackbarHostState.showSnackbar(it)
+            onAuthErrorShown()
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    KeyboardAwareScaffold(
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -126,8 +134,18 @@ fun RegistrationScreen(
                             onRegister(firstName, lastName, email, password)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !isLoading // Disable button when loading
                 ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(end = 8.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
                     Text("Register")
                 }
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
@@ -138,12 +156,7 @@ fun RegistrationScreen(
                 Text(
                     text = "Already have an account? Login here",
                     modifier = Modifier.clickable {
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+                        navigateTo(navController, Screen.Login, clearStack = true)
                     },
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
@@ -189,6 +202,7 @@ fun RegistrationScreenPreview() {
     RegistrationScreen(
         navController = rememberNavController(),
         authError = "test",
-        onRegister = { _, _, _, _ -> }
+        onRegister = { _, _, _, _ -> },
+        isLoading = false
     )
 }

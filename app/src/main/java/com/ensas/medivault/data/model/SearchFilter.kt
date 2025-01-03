@@ -4,10 +4,8 @@ data class SearchFilter(
     val query: String = "",
     val minPrice: Double = 0.0,
     val maxPrice: Double = Double.MAX_VALUE,
-//    val minRating: Float,
-//    val maxRating: Float,
     val sortBy: SortOption = SortOption.NAME,
-//    val categories: List<String>
+    val favoritesOnly: Boolean = false
 )
 
 enum class SortOption {

@@ -23,6 +23,7 @@ fun FilterDialog(
     var minPrice by remember { mutableStateOf(currentFilter.minPrice.toString()) }
     var maxPrice by remember { mutableStateOf(currentFilter.maxPrice.takeIf { it != Double.MAX_VALUE }?.toString() ?: "") }
     var selectedSort by remember { mutableStateOf(currentFilter.sortBy) }
+    var favoritesOnly by remember { mutableStateOf(currentFilter.favoritesOnly) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -63,6 +64,20 @@ fun FilterDialog(
 
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                // Only Favorites Filter
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Checkbox(
+                        checked = favoritesOnly,
+                        onCheckedChange = { favoritesOnly = it }
+                    )
+                    Text(text = "Favorites Only")
+                }
+
+                Spacer(modifier = Modifier.height(Dimensions.marginMedium))
+
                 // Sort Options
                 Text("Sort By:", style = MaterialTheme.typography.titleMedium)
                 Column {
@@ -88,7 +103,8 @@ fun FilterDialog(
                     query = query,
                     minPrice = minPrice.toDoubleOrNull() ?: 0.0,
                     maxPrice = maxPrice.toDoubleOrNull() ?: Double.MAX_VALUE,
-                    sortBy = selectedSort
+                    sortBy = selectedSort,
+                    favoritesOnly = favoritesOnly
                 )
                 onApplyFilters(updatedFilter)
                 onDismiss()

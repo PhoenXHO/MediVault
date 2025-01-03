@@ -2,6 +2,12 @@ package com.ensas.medivault.ui.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,11 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.data.repository.FakeFavoritesRepository
 import com.ensas.medivault.data.repository.FakeRepository
-import com.ensas.medivault.ui.components.MBottomBar
 import com.ensas.medivault.ui.components.MainScaffold
+import com.ensas.medivault.ui.components.MBottomBar
 import com.ensas.medivault.ui.components.MedicationsList
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
@@ -21,32 +26,27 @@ import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.MedicationsViewModel
 
-// For the screen that displays the list of medications
 @Composable
-fun HomeScreen(
+fun FavoritesScreen(
     navController: NavController,
     cartViewModel: CartViewModel,
-    viewModel: MedicationsViewModel = hiltViewModel(),
-    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
+    medicationsViewModel: MedicationsViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel
 ) {
-    // Get the list of medications from the view model
-    // `collectAsState` is used to observe the state of the medications and recompose the UI when the state changes
-    // (Equivalent to using `ObservableCollection` in .NET)
-    val medications by viewModel.medications.collectAsState()
+    val favorites by favoritesViewModel.favorites.collectAsState()
+    val allMedications by medicationsViewModel.medications.collectAsState()
+    val favoriteMedications = allMedications.filter { favorites.contains(it.id) }
 
-    // `rememberLazyGridState` is used to save the scroll state of the grid
     val state = rememberLazyListState()
 
-    // Get the favorites from Firebase
-    favoritesViewModel.initFavorites()
-
     MainScaffold(
+        title = "Favorites",
         navController = navController,
         contentModifier = Modifier.padding(horizontal = Dimensions.paddingLarge),
         bottomBar = {
             MBottomBar(
                 navController = navController,
-                currentScreen = Screen.Home,
+                currentScreen = Screen.Favorites,
                 modifier = Modifier
                     .padding(horizontal = Dimensions.paddingMedium)
                     .padding(bottom = Dimensions.paddingLarge)
@@ -55,7 +55,7 @@ fun HomeScreen(
         }
     ) {
         MedicationsList(
-            medications = medications,
+            medications = favoriteMedications,
             state = state,
             navController = navController,
             cartViewModel = cartViewModel,
@@ -64,14 +64,41 @@ fun HomeScreen(
     }
 }
 
-// Preview of the MedicationsListScreen
+@Composable
+fun FavoriteButton(
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean,
+    addToFavorites: () -> Unit,
+    removeFromFavorites: () -> Unit
+) {
+    IconButton(
+        modifier = modifier,
+        onClick = {
+            if (isFavorite) {
+                removeFromFavorites()
+            } else {
+                addToFavorites()
+            }
+        }
+    ) {
+        Icon(
+            imageVector = if (isFavorite) Icons.Filled.Favorite
+            else Icons.Outlined.FavoriteBorder,
+            contentDescription = if (isFavorite) "Remove from favorites"
+            else "Add to favorites",
+            tint = if (isFavorite) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun MedicationsListScreenPreview() {
-    HomeScreen(
-        navController = rememberNavController(),
+fun FavoritesScreenPreview() {
+    FavoritesScreen(
+        navController = androidx.navigation.compose.rememberNavController(),
         cartViewModel = CartViewModel(),
-        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository()),
-        viewModel = MedicationsViewModel(FakeRepository())
+        medicationsViewModel = MedicationsViewModel(FakeRepository()),
+        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
     )
 }

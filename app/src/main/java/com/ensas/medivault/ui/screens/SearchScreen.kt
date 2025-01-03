@@ -9,15 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.data.model.SearchFilter
 import com.ensas.medivault.data.model.SortOption
+import com.ensas.medivault.data.repository.FakeFavoritesRepository
 import com.ensas.medivault.data.repository.FakeRepository
 import com.ensas.medivault.ui.components.MButton
 import com.ensas.medivault.ui.components.MScaffold
@@ -51,6 +51,7 @@ fun SearchScreen(
     var minPrice by remember { mutableStateOf("") }
     var maxPrice by remember { mutableStateOf("") }
     var selectedSort by remember { mutableStateOf(SortOption.NAME) }
+    var favoritesOnly by remember { mutableStateOf(false) }
 
     MScaffold(
         navController = navController,
@@ -69,7 +70,8 @@ fun SearchScreen(
                             query = query,
                             minPrice = minPrice.toDoubleOrNull() ?: 0.0,
                             maxPrice = maxPrice.toDoubleOrNull() ?: Double.MAX_VALUE,
-                            sortBy = selectedSort
+                            sortBy = selectedSort,
+                            favoritesOnly = favoritesOnly
                         )
                     )
                     navController.navigate(Screen.SearchResults.route)
@@ -117,6 +119,21 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.padding(Dimensions.marginMedium))
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Checkbox(
+                    checked = favoritesOnly,
+                    onCheckedChange = { isChecked ->
+                        favoritesOnly = isChecked
+                    }
+                )
+                Text(text = "Favorites Only")
+            }
+
+            Spacer(modifier = Modifier.padding(Dimensions.marginMedium))
+
             Text("Sort by:", style = Typography.titleSmall)
             Spacer(modifier = Modifier.padding(Dimensions.marginSmall))
             FlowRow(
@@ -145,6 +162,9 @@ fun SearchScreen(
 fun SearchScreenPreview() {
     SearchScreen(
         navController = rememberNavController(),
-        viewModel = SearchViewModel(FakeRepository())
+        viewModel = SearchViewModel(
+            FakeRepository(),
+            FakeFavoritesRepository()
+        )
     )
 }

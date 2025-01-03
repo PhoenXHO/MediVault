@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,14 +22,17 @@ import com.ensas.medivault.ui.screens.RegistrationScreen
 import com.ensas.medivault.ui.screens.SearchResultsScreen
 import com.ensas.medivault.ui.screens.SearchScreen
 import com.ensas.medivault.ui.screens.ProfileScreen
+import com.ensas.medivault.ui.screens.FavoritesScreen
 import com.ensas.medivault.viewmodel.AuthViewModel
 import com.ensas.medivault.viewmodel.CartViewModel
+import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.SearchViewModel
 
 @Composable
 fun NavGraph(
     cartViewModel: CartViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val searchViewModel = hiltViewModel<SearchViewModel>()
@@ -41,6 +45,14 @@ fun NavGraph(
         Screen.Home.route
     }
 
+    LaunchedEffect(currentUser) {
+        if (currentUser == null) {
+            navigateTo(navController, Screen.Login, clearStack = true)
+        } else {
+            navigateTo(navController, Screen.Home, clearStack = true)
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -49,42 +61,42 @@ fun NavGraph(
             LoginScreen(
                 navController = navController,
                 authError = authError,
+                onAuthErrorShown = { authViewModel.clearAuthError() },
                 onLogin = { email, password ->
                     authViewModel.login(
                         email, password,
                         onLogin = {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
-                            }
                             Toast.makeText(
                                 navController.context,
                                 "Login successful",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            navigateTo(navController, Screen.Home, clearStack = true)
                         }
                     )
-                }
+                },
+                isLoading = authViewModel.isLoading.collectAsState().value
             )
         }
         composable(Screen.Registration.route) {
             RegistrationScreen(
                 navController = navController,
                 authError = authError,
+                onAuthErrorShown = { authViewModel.clearAuthError() },
                 onRegister = { firstName, lastName, email, password ->
                     authViewModel.register(
                         firstName, lastName, email, password,
                         onRegister = {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Registration.route) { inclusive = true }
-                            }
                             Toast.makeText(
                                 navController.context,
                                 "Registration successful",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            navigateTo(navController, Screen.Home, clearStack = true)
                         }
                     )
-                }
+                },
+                isLoading = authViewModel.isLoading.collectAsState().value
             )
         }
         composable(Screen.Search.route) {
@@ -97,25 +109,32 @@ fun NavGraph(
             SearchResultsScreen(
                 navController = navController,
                 cartViewModel = cartViewModel,
-                viewModel = searchViewModel
+                viewModel = searchViewModel,
+                favoritesViewModel = favoritesViewModel
             )
         }
         composable(Screen.Cart.route) {
             CartScreen(navController, cartViewModel)
         }
         composable(Screen.Home.route) {
-            HomeScreen(navController, cartViewModel)
+            HomeScreen(
+                navController = navController,
+                cartViewModel = cartViewModel,
+                favoritesViewModel = favoritesViewModel
+            )
         }
         composable(
             route = Screen.MedicationDetails.createRoute("{medicationId}"),
             arguments = listOf(navArgument("medicationId") {
-                type = NavType.StringType
+                type = NavType.IntType
             })
         ) { backStackEntry ->
+            val medicationId = backStackEntry.arguments?.getInt("medicationId")!!
             MedicationDetailsScreen(
                 navController = navController,
-                medicationId = backStackEntry.arguments?.getString("medicationId"),
-                cartViewModel = cartViewModel
+                medicationId = medicationId,
+                cartViewModel = cartViewModel,
+                favoritesViewModel = favoritesViewModel
             )
         }
         composable(Screen.Checkout.route) {
@@ -127,23 +146,32 @@ fun NavGraph(
                 currentUser = UserInfo.fromFirebaseUser(currentUser),
                 onLogout = {
                     authViewModel.signOut()
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
-                    }
+                    Toast.makeText(
+                        navController.context,
+                        "Logged out successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navigateTo(navController, Screen.Login, clearStack = true)
                 }
             )
         }
+        composable(Screen.Favorites.route) {
+            FavoritesScreen(
+                navController = navController,
+                cartViewModel = cartViewModel,
+                favoritesViewModel = favoritesViewModel
+            )
+        }
     }
+}
 
-    LaunchedEffect(currentUser) {
-        if (currentUser == null) {
-            navController.navigate(Screen.Login.route) {
-                popUpTo(Screen.Home.route) { inclusive = true }
+fun navigateTo(navController: NavController, screen: Screen, clearStack: Boolean = false) {
+    navController.navigate(screen.route) {
+        if (clearStack) {
+            popUpTo(0) { // Clear the back stack
+                inclusive = true
             }
-        } else {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Login.route) { inclusive = true }
-            }
+            launchSingleTop = true
         }
     }
 }

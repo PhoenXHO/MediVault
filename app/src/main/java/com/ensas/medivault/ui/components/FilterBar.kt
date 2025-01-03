@@ -37,7 +37,7 @@ fun FilterBar(
                 onClick = { onRemoveFilter(FilterType.QUERY) },
                 label = { Text("Query: ${filter.query}") },
                 leadingIcon = {
-                    Icon(Icons.Default.Close, contentDescription = "Remove Query Filter")
+                    Icon(Icons.Default.Close, "Remove Query Filter")
                 },
                 modifier = Modifier.height(32.dp)
             )
@@ -50,7 +50,20 @@ fun FilterBar(
                 onClick = { onRemoveFilter(FilterType.PRICE_RANGE) },
                 label = { Text(formulatePrice(filter.minPrice, filter.maxPrice)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Close, contentDescription = "Remove Price Filter")
+                    Icon(Icons.Default.Close, "Remove Price Filter")
+                },
+                modifier = Modifier.height(32.dp)
+            )
+        }
+
+        // Only Favorites Filter
+        if (filter.favoritesOnly) {
+            FilterChip(
+                selected = true,
+                onClick = { onRemoveFilter(FilterType.FAVORITES_ONLY) },
+                label = { Text("Favorites Only") },
+                leadingIcon = {
+                    Icon(Icons.Default.Close, "Remove Favorites Only Filter")
                 },
                 modifier = Modifier.height(32.dp)
             )
@@ -63,7 +76,7 @@ fun FilterBar(
                 onClick = { onRemoveFilter(FilterType.SORT_OPTION) },
                 label = { Text("Sort by ${filter.sortBy.getSortName()}") },
                 leadingIcon = {
-                    Icon(Icons.Default.Close, contentDescription = "Remove Sort Filter")
+                    Icon(Icons.Default.Close, "Remove Sort Filter")
                 },
                 modifier = Modifier.height(32.dp)
             )
@@ -76,6 +89,7 @@ enum class FilterType {
     QUERY,
     PRICE_RANGE,
     SORT_OPTION,
+    FAVORITES_ONLY,
 }
 
 // Helper function to format price range
@@ -96,7 +110,8 @@ fun FilterBarPreview() {
         filter = SearchFilter(
             query = "Headache",
             minPrice = 10.0,
-            sortBy = SortOption.PRICE_ASC
+            sortBy = SortOption.PRICE_ASC,
+            favoritesOnly = true
         ),
         onRemoveFilter = { /* Handle filter removal */ }
     )

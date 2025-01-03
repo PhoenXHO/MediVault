@@ -11,9 +11,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.ui.navigation.Screen
+import com.ensas.medivault.ui.navigation.navigateTo
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.ui.theme.Shapes
 
@@ -64,14 +65,14 @@ fun MBottomBar(
                 )
             }
             IconButton(
-                onClick = { /*navigateTo(navController, Screen.Favorites, currentScreen)*/ },
+                onClick = { navigateTo(navController, Screen.Favorites, currentScreen) },
                 modifier = Modifier.size(64.dp)
             ) {
                 IconWithText(
-                    icon = Icons.Rounded.FavoriteBorder,
+                    icon = Icons.Outlined.FavoriteBorder,
                     altIcon = Icons.Default.Favorite,
                     text = "Favorites",
-                    isSelected = false
+                    isSelected = currentScreen == Screen.Favorites
                 )
             }
             IconButton(
@@ -91,12 +92,7 @@ fun MBottomBar(
 
 private fun navigateTo(navController: NavController, screen: Screen, currentScreen: Screen) {
     if (currentScreen != screen) {
-        navController.navigate(screen.route) {
-            popUpTo(navController.graph.startDestinationId) {
-                inclusive = true
-            }
-            launchSingleTop = true
-        }
+        navigateTo(navController, screen, clearStack = true)
     }
 }
 

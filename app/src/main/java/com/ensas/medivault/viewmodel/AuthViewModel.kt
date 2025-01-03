@@ -1,6 +1,5 @@
 package com.ensas.medivault.viewmodel
 
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ensas.medivault.data.UserInfo
@@ -15,14 +14,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class AuthViewModel @Inject constructor(private val userPreferences: UserPreferences) : ViewModel() {
+class AuthViewModel @Inject constructor(private val userPreferences: UserPreferences) : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    // Add state for current user
     private val _currentUser = MutableStateFlow(auth.currentUser)
-    open val currentUser: StateFlow<FirebaseUser?> get() = _currentUser
+    val currentUser: StateFlow<FirebaseUser?> get() = _currentUser
 
     // Add states for error messages
     private val _authError = MutableStateFlow<String?>(null)
     val authError: StateFlow<String?> get() = _authError
+
+    // Add loading state
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
@@ -56,6 +61,7 @@ open class AuthViewModel @Inject constructor(private val userPreferences: UserPr
         onRegister: () -> Unit
     ) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -69,9 +75,12 @@ open class AuthViewModel @Inject constructor(private val userPreferences: UserPr
                     } else {
                         _authError.value = task.exception?.message
                     }
+                }.addOnCompleteListener {
+                    _isLoading.value = false
                 }
             } catch (e: Exception) {
                 _authError.value = e.message
+                _isLoading.value = false
             }
         }
     }
@@ -83,6 +92,7 @@ open class AuthViewModel @Inject constructor(private val userPreferences: UserPr
         onLogin: () -> Unit
     ) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -91,10 +101,17 @@ open class AuthViewModel @Inject constructor(private val userPreferences: UserPr
                     } else {
                         _authError.value = task.exception?.message
                     }
+                }.addOnCompleteListener {
+                    _isLoading.value = false
                 }
             } catch (e: Exception) {
                 _authError.value = e.message
+                _isLoading.value = false
             }
         }
+    }
+
+    fun clearAuthError() {
+        _authError.value = null
     }
 }

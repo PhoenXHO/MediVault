@@ -52,12 +52,10 @@ dependencies {
     implementation(libs.coil.network.okhttp) // Coil's OkHttp extension for network loading
     implementation(libs.androidx.navigation.compose) // Navigation for Jetpack Compose
     implementation(libs.hilt.android) // Hilt for dependency injection
+    implementation(libs.github.compose.markdown) // Markdown support for Jetpack Compose
 
     // Room dependencies
     implementation(libs.androidx.room.ktx)
-    implementation(libs.googleid)
-    implementation(libs.firebase.firestore.ktx)
-    implementation(libs.androidx.storage)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)
 
@@ -67,6 +65,9 @@ dependencies {
     kapt(libs.hilt.android.compiler.v2511)
 
     // Firebase dependencies
+    implementation(libs.googleid)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.storage)
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.core)

@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.data.model.SearchFilter
 import com.ensas.medivault.data.model.SortOption
+import com.ensas.medivault.data.repository.FakeFavoritesRepository
 import com.ensas.medivault.data.repository.FakeRepository
 import com.ensas.medivault.ui.components.FilterBar
 import com.ensas.medivault.ui.components.FilterDialog
@@ -33,13 +34,15 @@ import com.ensas.medivault.ui.components.MedicationsList
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.viewmodel.CartViewModel
+import com.ensas.medivault.viewmodel.FavoritesViewModel
 import com.ensas.medivault.viewmodel.SearchViewModel
 
 @Composable
 fun SearchResultsScreen(
     navController: NavController,
     cartViewModel: CartViewModel,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel
 ) {
     val searchResults by viewModel.searchResults.collectAsState()
     val filters by viewModel.filters.collectAsState()
@@ -98,7 +101,8 @@ fun SearchResultsScreen(
                     medications = searchResults,
                     state = rememberLazyListState(),
                     navController = navController,
-                    cartViewModel = cartViewModel
+                    cartViewModel = cartViewModel,
+                    favoritesViewModel = favoritesViewModel
                 )
             }
 
@@ -120,7 +124,10 @@ fun SearchResultsScreen(
 @Preview(showBackground = true)
 @Composable
 fun SearchResultsScreenPreview() {
-    val searchViewModel = SearchViewModel(FakeRepository())
+    val searchViewModel = SearchViewModel(
+        FakeRepository(),
+        FakeFavoritesRepository()
+    )
     searchViewModel.setFilters(
         SearchFilter(
             query = "Med",
@@ -132,6 +139,7 @@ fun SearchResultsScreenPreview() {
     SearchResultsScreen(
         navController = rememberNavController(),
         cartViewModel = CartViewModel(),
-        viewModel = searchViewModel
+        viewModel = searchViewModel,
+        favoritesViewModel = FavoritesViewModel(FakeFavoritesRepository())
     )
 }

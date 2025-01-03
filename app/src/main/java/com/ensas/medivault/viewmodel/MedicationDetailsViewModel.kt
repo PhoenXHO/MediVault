@@ -15,7 +15,7 @@ class MedicationDetailsViewModel @Inject constructor(private val repository: Med
     private val _medication = MutableStateFlow<Medication?>(null)
     val medication: StateFlow<Medication?> get() = _medication
 
-    fun fetchMedicationDetails(medicationId: String) {
+    fun fetchMedicationDetails(medicationId: Int) {
         // Fetch the medication details from the repository in a coroutine
         // We are using viewModelScope to launch the coroutine in the context of ViewModel
         // so that it gets automatically canceled when the ViewModel is cleared

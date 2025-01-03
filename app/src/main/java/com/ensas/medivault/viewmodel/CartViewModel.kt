@@ -17,11 +17,11 @@ class CartViewModel : ViewModel() {
         }
     }
 
-    fun removeFromCart(id: String) {
+    fun removeFromCart(id: Int) {
         _cartItems.value = _cartItems.value.filter { it.id != id }
     }
 
-    fun updateQuantity(id: String, quantity: Int) {
+    fun updateQuantity(id: Int, quantity: Int) {
         _cartItems.value = _cartItems.value.map {
             if (it.id == id) {
                 it.copy(quantity = quantity)
@@ -31,7 +31,7 @@ class CartViewModel : ViewModel() {
         }
     }
 
-    private fun getQuantity(id: String): Int {
+    private fun getQuantity(id: Int): Int {
         return _cartItems.value.find { it.id == id }?.quantity ?: 0
     }
 }

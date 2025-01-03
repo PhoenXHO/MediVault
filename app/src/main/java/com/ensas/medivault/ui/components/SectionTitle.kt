@@ -41,7 +41,7 @@ fun SectionTitle(
         )
         Text(
             text = title,
-            style = Typography.titleSmall
+            style = Typography.titleMedium
         )
     }
 }

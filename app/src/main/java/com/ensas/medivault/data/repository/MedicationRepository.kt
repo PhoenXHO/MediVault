@@ -11,7 +11,7 @@ open class MedicationRepository @Inject constructor(private val medicationDao: M
         return medicationDao.getAllMedications()
     }
 
-    suspend fun getMedicationById(id: String): Medication? {
+    suspend fun getMedicationById(id: Int): Medication? {
         return medicationDao.getMedicationById(id)
     }
 

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -30,13 +32,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.auth.GoogleAuthUiClient
 import com.ensas.medivault.data.UserInfo
 import com.ensas.medivault.data.UserPreferences
+import com.ensas.medivault.ui.components.KeyboardAwareScaffold
 import com.ensas.medivault.ui.components.MButton
 import com.ensas.medivault.ui.navigation.Screen
+import com.ensas.medivault.ui.navigation.navigateTo
 import com.ensas.medivault.ui.theme.Dimensions
 import com.ensas.medivault.ui.theme.Typography
 import kotlinx.coroutines.launch
@@ -45,7 +50,9 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navController: NavController,
     authError: String?,
-    onLogin: (String, String) -> Unit
+    onAuthErrorShown: () -> Unit = {},
+    onLogin: (String, String) -> Unit,
+    isLoading: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -55,11 +62,12 @@ fun LoginScreen(
     LaunchedEffect(authError) {
         authError?.let {
             snackbarHostState.showSnackbar(it)
+            onAuthErrorShown()
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    KeyboardAwareScaffold(
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -104,8 +112,18 @@ fun LoginScreen(
                             onLogin(email, password)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !isLoading // Disable button when loading
                 ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(end = 8.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
                     Text("Login")
                 }
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
@@ -116,12 +134,7 @@ fun LoginScreen(
                 Text(
                     text = "Don't have an account? Register here",
                     modifier = Modifier.clickable {
-                        navController.navigate(Screen.Registration.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+                        navigateTo(navController, Screen.Registration, clearStack = true)
                     },
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.End
@@ -165,7 +178,8 @@ fun GoogleSignInButton(navController: NavController) {
                     )
                 }
                 navController.navigate(Screen.Home.route)
-                Toast.makeText(context, "Logged in", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Log in successful", Toast.LENGTH_SHORT)
+                    .show()
             }
         )
     }
@@ -184,7 +198,8 @@ fun GoogleSignInButton(navController: NavController) {
                         )
                     }
                     navController.navigate(Screen.Home.route)
-                    Toast.makeText(context, "Logged in", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Log in successful", Toast.LENGTH_SHORT)
+                        .show()
                 }
             )
         },
@@ -200,6 +215,7 @@ fun LoginScreenPreview() {
     LoginScreen(
         navController = rememberNavController(),
         authError = null,
-        onLogin = { _, _ -> }
+        onLogin = { _, _ -> },
+        isLoading = false
     )
 }
