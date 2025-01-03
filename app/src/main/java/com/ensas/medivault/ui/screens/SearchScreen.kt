@@ -140,8 +140,7 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
-//                    checked = favoritesOnly,
-                    checked = true,
+                    checked = favoritesOnly,
                     onCheckedChange = { favoritesOnly = it },
                 )
                 Text(text = "Favorites Only")
