@@ -23,18 +23,20 @@ fun FilterDialog(
     onApplyFilters: (SearchFilter) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // State variables to hold filter inputs
     var query by remember { mutableStateOf(currentFilter.query) }
     var minPrice by remember { mutableStateOf(currentFilter.minPrice.toString()) }
     var maxPrice by remember { mutableStateOf(currentFilter.maxPrice.takeIf { it != Double.MAX_VALUE }?.toString() ?: "") }
     var selectedSort by remember { mutableStateOf(currentFilter.sortBy) }
     var favoritesOnly by remember { mutableStateOf(currentFilter.favoritesOnly) }
 
+    // AlertDialog to present filter options to the user
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text("Edit Filters") },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                // Search Query
+                // Text field for updating the search query
                 MTextField(
                     value = query,
                     onValueChange = { query = it },
@@ -46,11 +48,12 @@ fun FilterDialog(
 
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                // Price Range
+                // Row layout for minimum and maximum price input fields
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Text field for minimum price
                     MTextField(
                         value = minPrice,
                         onValueChange = { minPrice = it },
@@ -60,6 +63,7 @@ fun FilterDialog(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     )
                     Spacer(modifier = Modifier.width(Dimensions.marginMedium))
+                    // Text field for maximum price
                     MTextField(
                         value = maxPrice,
                         onValueChange = { maxPrice = it },
@@ -72,7 +76,7 @@ fun FilterDialog(
 
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                // Only Favorites Filter
+                // Checkbox to filter results by favorites only
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -86,9 +90,10 @@ fun FilterDialog(
 
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
-                // Sort Options
+                // Section for selecting sort options
                 Text("Sort By:", style = MaterialTheme.typography.titleMedium)
                 Column {
+                    // Iterate through sort options and create radio buttons
                     SortOption.entries.forEach { option ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -106,6 +111,7 @@ fun FilterDialog(
             }
         },
         confirmButton = {
+            // Apply button to apply selected filters
             TextButton(onClick = {
                 val updatedFilter = SearchFilter(
                     query = query,
@@ -121,6 +127,7 @@ fun FilterDialog(
             }
         },
         dismissButton = {
+            // Cancel button to dismiss the dialog without applying changes
             TextButton(onClick = { onDismiss() }) {
                 Text("Cancel")
             }

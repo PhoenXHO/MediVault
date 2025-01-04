@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import com.ensas.medivault.ui.theme.MediVaultTheme
 import com.ensas.medivault.ui.theme.Typography
 
-// Display the price with the decimal part smaller in size
+// Composable to display a price with the decimal part styled differently
 @Composable
 fun PriceText(
     price: Double,
@@ -22,6 +22,7 @@ fun PriceText(
 ) {
     val priceStr = "%.2f".format(price)
     val (integerPart, decimalPart) = priceStr.split(".")
+    // Build annotated string with styled decimal part
     Text(
         buildAnnotatedString {
             append(integerPart)

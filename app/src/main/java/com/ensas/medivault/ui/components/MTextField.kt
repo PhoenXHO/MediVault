@@ -21,7 +21,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +46,7 @@ fun MTextField(
 
     Column(modifier = modifier.fillMaxWidth()) {
         if (label != null) {
+            // Display label above the text field
             Text(
                 text = label,
                 style = Typography.displaySmall,
@@ -58,6 +58,7 @@ fun MTextField(
             )
         }
 
+        // Custom styled text field
         TextField(
             modifier = Modifier
                 .fillMaxWidth()

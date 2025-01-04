@@ -34,6 +34,7 @@ fun KeyboardAwareScaffold(
         (LocalConfiguration.current.screenHeightDp * 0.6f).toDp()
     }
 
+    // Scaffold that adjusts the snackbar position based on keyboard visibility
     Scaffold(
         modifier = modifier,
         snackbarHost = {
@@ -47,6 +48,7 @@ fun KeyboardAwareScaffold(
             }
         }
     ) { paddingValues ->
+        // Content of the scaffold with applied padding
         content(paddingValues)
     }
 }

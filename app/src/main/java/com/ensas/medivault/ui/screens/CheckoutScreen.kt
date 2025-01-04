@@ -27,19 +27,24 @@ import com.ensas.medivault.viewmodel.CartViewModel
 
 @Composable
 fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel) {
+    // Main scaffold for the checkout screen
     MScaffold(
         navController = navController,
         title = "Checkout",
         backArrow = true,
         contentModifier = Modifier.padding(horizontal = Dimensions.paddingLarge),
     ) {
+        // Column to layout checkout information and confirmation button
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Instruction text for payment
             Text("Proceed with your payment details.")
             Spacer(modifier = Modifier.height(20.dp))
+            
+            // Confirm purchase button to finalize the order
             MButton(
                 onClick = { /* Handle checkout action */ },
                 colors = ButtonDefaults.buttonColors(

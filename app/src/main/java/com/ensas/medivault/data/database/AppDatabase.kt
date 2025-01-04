@@ -20,6 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        // Retrieves the singleton instance of AppDatabase
         fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -27,13 +28,14 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "medivault_database"
                 )
-                    .addCallback(AppDatabaseCallback(scope))
+                    .addCallback(AppDatabaseCallback(scope)) // Add callback for pre-population
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
 
+        // Callback to populate the database when it's first created
         private class AppDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
@@ -41,7 +43,7 @@ abstract class AppDatabase : RoomDatabase() {
                 INSTANCE?.let { database ->
                     scope.launch {
                         Log.d("AppDatabase", "Populating the database with initial data...")
-                        // Populate the database with initial data
+                        // Insert initial medications into the database
                         val medicationDao = database.medicationDao()
                         InitialData.medications.forEach { medication ->
                             medicationDao.insertMedication(medication)

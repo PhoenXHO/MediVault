@@ -31,21 +31,20 @@ fun HomeScreen(
     viewModel: MedicationsViewModel = hiltViewModel(),
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
 ) {
-    // Get the list of medications from the view model
-    // `collectAsState` is used to observe the state of the medications and recompose the UI when the state changes
-    // (Equivalent to using `ObservableCollection` in .NET)
+    // Collect list of medications from the view model
     val medications by viewModel.medications.collectAsState()
 
-    // `rememberLazyGridState` is used to save the scroll state of the grid
+    // Remember the scroll state for the medications list
     val state = rememberLazyListState()
 
-    // Get the favorites from Firebase
+    // Initialize favorites from Firebase
     favoritesViewModel.initFavorites()
 
     MainScaffold(
         navController = navController,
         contentModifier = Modifier.padding(horizontal = Dimensions.paddingLarge),
         bottomBar = {
+            // Bottom navigation bar
             MBottomBar(
                 navController = navController,
                 currentScreen = Screen.Home,
@@ -55,14 +54,15 @@ fun HomeScreen(
                     .padding(bottom = Dimensions.paddingSmall)
             )
         }
-    ) { paddinValues ->
+    ) { paddingValues ->
+        // Display the list of medications
         MedicationsList(
             medications = medications,
             state = state,
             navController = navController,
             cartViewModel = cartViewModel,
             favoritesViewModel = favoritesViewModel,
-            bottomPadding = paddinValues.calculateBottomPadding()
+            bottomPadding = paddingValues.calculateBottomPadding()
         )
     }
 }

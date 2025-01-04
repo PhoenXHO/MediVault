@@ -3,7 +3,9 @@ package com.ensas.medivault.data
 import com.ensas.medivault.data.model.Medication
 
 object InitialData {
+    // Predefined list of medications to populate the database initially
     val medications = listOf(
+        // Medication 1: Nofebril - Paracetamol
         Medication(
             name = "Nofebril - Paracetamol",
             contents = "500 mg, 20 tablets",
@@ -67,6 +69,7 @@ object InitialData {
             """.trimIndent(),
             imageUrl = "https://e-xportmorocco.com/storage/produits/1640809486.jpeg"
         ),
+        // Medication 2: Tofranil - Imipramine
         Medication(
             name = "Tofranil - Imipramine",
             contents = "25 mg, 100 tablets",
@@ -117,6 +120,7 @@ object InitialData {
             """.trimIndent(),
             imageUrl = "https://assospharma.com/wp-content/uploads/2021/02/tofranil.jpg"
         ),
+        // Medication 3: Valium
         Medication(
             name = "Valium",
             contents = "10 mg, 30 tablets",
@@ -165,6 +169,7 @@ object InitialData {
             """.trimIndent(),
             imageUrl = "https://images.sunstore.ch/product-images/valium-cpr-10-mg-100-pce-main-00016H.jpg"
         ),
+        // Medication 4: Fabrazyme
         Medication(
             name = "Fabrazyme",
             contents = "35 mg, 1 vial",
@@ -231,6 +236,7 @@ object InitialData {
             """.trimIndent(),
             imageUrl = "https://www.sansfro.com/wp-content/uploads/2023/10/Untitled-design-13-min.png"
         ),
+        // Medication 5: Efavir - Efavirenz
         Medication(
             name = "Efavir - Efavirenz",
             contents = "600 mg, 30 tablets",
@@ -277,6 +283,7 @@ object InitialData {
             """.trimIndent(),
             imageUrl = "https://5.imimg.com/data5/SELLER/Default/2024/10/461021360/GW/PY/MU/188791916/efavir-efavirenz-tablets.jpeg"
         ),
+        // Medication 6: Codoliprane
         Medication(
             name = "Codoliprane",
             contents = "500 mg, 16 tablets",

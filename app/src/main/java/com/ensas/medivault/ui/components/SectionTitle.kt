@@ -28,6 +28,7 @@ fun SectionTitle(
     icon: ImageVector,
     modifier: Modifier = Modifier
 ) {
+    // Row layout to display an icon alongside the section title
     Row(
         modifier = modifier.padding(vertical = Dimensions.paddingMedium),
         verticalAlignment = Alignment.CenterVertically

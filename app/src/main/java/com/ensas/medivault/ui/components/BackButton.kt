@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun BackButton(navController: NavController, modifier: Modifier = Modifier) {
+    // IconButton that navigates back when clicked
     IconButton(
         onClick = { navController.popBackStack() },
         modifier = modifier

@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MedicationsViewModel @Inject constructor(private val repository: MedicationRepository) : ViewModel() {
-    // A list of medications
+    // StateFlow to hold the list of medications
     // MutableStateFlow is a type of Flow that allows you to change its value
     // A StateFlow is a type of Flow that represents a read-only state with a single updatable data value
     // A Flow is a type that can emit multiple values sequentially

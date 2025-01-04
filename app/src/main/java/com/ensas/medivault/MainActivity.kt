@@ -16,10 +16,12 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialize Firebase in a background thread
         CoroutineScope(Dispatchers.IO).launch {
             FirebaseApp.initializeApp(this@MainActivity)
         }
 
+        // Enable edge-to-edge display and set the Compose content
         enableEdgeToEdge()
         setContent {
             MediVaultTheme {

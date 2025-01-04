@@ -8,15 +8,18 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+// Extension property to create DataStore instance
 val Context.dataStore by preferencesDataStore(name = "user_preferences")
 
 open class UserPreferences(private val context: Context?) {
     companion object {
+        // Keys for storing user information
         val USERNAME = stringPreferencesKey("username")
         val EMAIL = stringPreferencesKey("email")
         val PHOTO_URL = stringPreferencesKey("photo_url")
     }
 
+    // Flow to retrieve user information from DataStore
     open val userInfo: Flow<UserInfo>? = context?.dataStore?.data?.map { preferences ->
         UserInfo(
             displayName = preferences[USERNAME] ?: "",
@@ -25,6 +28,7 @@ open class UserPreferences(private val context: Context?) {
         )
     }
 
+    // Saves user information to DataStore
     open suspend fun saveUserInfo(userInfo: UserInfo) {
         context?.dataStore?.edit { preferences ->
             preferences[USERNAME] = userInfo.displayName
@@ -33,6 +37,7 @@ open class UserPreferences(private val context: Context?) {
         }
     }
 
+    // Clears user information from DataStore
     open suspend fun clearUserInfo() {
         context?.dataStore?.edit { preferences ->
             preferences.clear()
@@ -40,12 +45,14 @@ open class UserPreferences(private val context: Context?) {
     }
 }
 
+// Data class representing user information
 data class UserInfo(
     val displayName: String,
     val email: String,
     val photoUrl: String = ""
 ) {
     companion object {
+        // Creates UserInfo from FirebaseUser
         fun fromFirebaseUser(user: FirebaseUser?): UserInfo {
             return UserInfo(
                 displayName = user?.displayName ?: "",

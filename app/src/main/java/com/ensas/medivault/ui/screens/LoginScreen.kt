@@ -64,6 +64,7 @@ fun LoginScreen(
 
     LaunchedEffect(authError) {
         authError?.let {
+            // Show authentication error in snackbar
             snackbarHostState.showSnackbar(it)
             onAuthErrorShown()
         }
@@ -88,6 +89,7 @@ fun LoginScreen(
                     style = Typography.titleLarge)
                 Spacer(modifier = Modifier.height(Dimensions.marginExtraLarge))
 
+                // Text field for email input
                 MTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -96,6 +98,7 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                // Text field for password input
                 MTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -105,21 +108,25 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.height(Dimensions.marginLarge))
 
+                // Button to initiate login
                 MButton(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isLoading, // Disable button when loading
                     onClick = {
+                        // Validate user input before login
                         val error = validateInput(email, password)
                         if (error != null) {
                             coroutineScope.launch {
                                 snackbarHostState.showSnackbar(error)
                             }
                         } else {
+                            // Proceed with login if input is valid
                             onLogin(email, password)
                         }
                     },
                 ) {
                     if (isLoading) {
+                        // Show loading indicator while logging in
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
@@ -131,12 +138,14 @@ fun LoginScreen(
                     Text("Login")
                 }
 
+                // Button for Google sign-in
                 GoogleSignInButton(navController)
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                 Text(
                     text = "Don't have an account? Register here",
                     modifier = Modifier.clickable {
+                        // Navigate to registration screen
                         navigateTo(navController, Screen.Registration, clearStack = true)
                     },
                     color = MaterialTheme.colorScheme.secondary,
@@ -187,12 +196,15 @@ fun GoogleSignInButton(navController: NavController) {
         )
     }
 
+    // Button that triggers Google sign-in process
     MButton(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
+            // Initiate Google sign-in
             GoogleAuthUiClient.signInWithGoogle(
                 context, scope, launcher,
                 login = { user ->
+                    // Handle successful login
                     scope.launch {
                         userPreferences.saveUserInfo(
                             UserInfo(

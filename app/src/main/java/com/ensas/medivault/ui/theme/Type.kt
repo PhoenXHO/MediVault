@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.sp
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    // Body text
+    // Body text styles
     bodySmall = TextStyle(
         fontFamily = RubikFontFamily,
         fontWeight = FontWeight.Normal,
@@ -30,7 +30,7 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
-    // Titles
+    // Title text styles
     titleSmall = TextStyle(
         fontFamily = RubikFontFamily,
         fontWeight = FontWeight.Medium,
@@ -53,7 +53,7 @@ val Typography = Typography(
         letterSpacing = 0.15.sp
     ),
 
-    // Headlines
+    // Headline text styles
     headlineSmall = TextStyle(
         fontFamily = RubikFontFamily,
         fontWeight = FontWeight.Bold,
@@ -76,7 +76,7 @@ val Typography = Typography(
         letterSpacing = 0.15.sp
     ),
 
-    // Labels
+    // Label text styles
     labelSmall = TextStyle(
         fontFamily = RubikFontFamily,
         fontWeight = FontWeight.Normal,
@@ -99,7 +99,7 @@ val Typography = Typography(
         letterSpacing = 0.15.sp
     ),
 
-    // Display
+    // Display text styles
     displaySmall = TextStyle(
         fontFamily = RubikFontFamily,
         fontWeight = FontWeight.Medium,

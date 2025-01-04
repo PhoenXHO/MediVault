@@ -56,25 +56,30 @@ fun MedicationDetailsScreen(
     favoritesViewModel: FavoritesViewModel,
     viewModel: MedicationDetailsViewModel = hiltViewModel()
 ) {
+    // Fetch medication details when the screen is displayed
     medicationId.let {
         viewModel.fetchMedicationDetails(it)
     }
 
+    // Observe medication details from the ViewModel
     val medication by viewModel.medication.collectAsState()
     val cartItems by cartViewModel.cartItems.collectAsState()
     val currentItem = cartItems.find { it.id == medicationId }
     val quantity = currentItem?.quantity ?: 0
 
+    // Observe favorites to determine if the medication is marked as favorite
     val favorites by favoritesViewModel.favorites.collectAsState()
     val isFavorite = medicationId.let { favorites.contains(it) }
 
     medication?.let { med ->
+        // Main scaffold for the medication details screen
         MScaffold(
             navController = navController,
             title = "Medication Details",
             backArrow = true,
             contentModifier = Modifier.padding(Dimensions.paddingLarge),
             actions = {
+                // Favorite button in the top app bar to add/remove from favorites
                 FavoriteButton(
                     isFavorite = isFavorite,
                     addToFavorites = { favoritesViewModel.addToFavorites(medicationId) },
@@ -82,6 +87,7 @@ fun MedicationDetailsScreen(
                 )
             },
             bottomBar = {
+                // Bottom bar containing add to cart or quantity chooser
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -94,6 +100,7 @@ fun MedicationDetailsScreen(
                 ) {
                     // Conditional UI for Add to cart or Quantity Chooser
                     if (quantity == 0) {
+                        // Button to add the medication to the cart
                         MButton(
                             modifier = Modifier.height(40.dp),
                             onClick = {
@@ -110,6 +117,7 @@ fun MedicationDetailsScreen(
                             )
                         ) { Text("Add to cart") }
                     } else {
+                        // Quantity chooser to increase or decrease the number of items in the cart
                         QuantityChooser(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -128,12 +136,14 @@ fun MedicationDetailsScreen(
                 }
             }
         ) { paddingValues ->
+            // Column to layout the medication details and sections
             Column(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                // Fixed header
+                // Fixed header section with image, name, contents, and price
                 Column(modifier = Modifier.fillMaxWidth()) {
+                    // Display medication image
                     ItemAsyncImage(
                         imageUrl = med.imageUrl,
                         contentDescription = med.name,
@@ -144,39 +154,51 @@ fun MedicationDetailsScreen(
                         contentScale = ContentScale.Fit
                     )
 
+                    // Display medication name
                     Text(text = med.name, style = Typography.titleLarge)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
+                    
+                    // Display medication contents
                     Text(text = med.contents)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
+                    
+                    // Display medication price
                     PriceText(price = med.price, style = Typography.displayLarge)
                 }
 
+                // Scrollable content section with detailed information
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
                 ) {
+                    // Description section
                     SectionTitle(title = "Description", icon = Icons.Rounded.Description)
                     MarkdownText(med.description)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                    // Important Information section
                     SectionTitle(title = "Important Information", icon = Icons.Outlined.Info)
                     MarkdownText(med.importantInfo)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                    // Precautions before use
                     SectionTitle(title = "Before Use", icon = Icons.Rounded.WarningAmber)
                     MarkdownText(med.precautions)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                    // Uses of the medication
                     SectionTitle(title = "Uses", icon = Icons.Rounded.MedicalServices)
                     MarkdownText(med.uses)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                    // Dosage information
                     SectionTitle(title = "Dosage", icon = Icons.Rounded.Schedule)
                     MarkdownText(med.dosage)
                     Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                    // Side Effects information
                     SectionTitle(title = "Side Effects", icon = Icons.Rounded.Dangerous)
                     MarkdownText(med.sideEffects)
 

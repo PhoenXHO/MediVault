@@ -9,6 +9,7 @@ class ThemeViewModel : ViewModel() {
     private val _isDarkMode = MutableStateFlow(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode
 
+    // Toggles the current theme between dark and light modes
     fun toggleTheme() {
         _isDarkMode.value = !_isDarkMode.value
     }

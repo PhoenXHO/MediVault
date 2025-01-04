@@ -39,12 +39,14 @@ fun NavGraph(
     val currentUser by authViewModel.currentUser.collectAsState()
     val authError by authViewModel.authError.collectAsState()
 
+    // Determines the start destination based on user authentication status
     val startDestination = if (currentUser == null) {
         Screen.Login.route
     } else {
         Screen.Home.route
     }
 
+    // Navigates to the appropriate screen when authentication status changes
     LaunchedEffect(currentUser) {
         if (currentUser == null) {
             navigateTo(navController, Screen.Login, clearStack = true)
@@ -53,10 +55,12 @@ fun NavGraph(
         }
     }
 
+    // Sets up the navigation host with all composable destinations
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
+        // Login screen destination
         composable(Screen.Login.route) {
             LoginScreen(
                 navController = navController,
@@ -78,6 +82,8 @@ fun NavGraph(
                 isLoading = authViewModel.isLoading.collectAsState().value
             )
         }
+        
+        // Registration screen destination
         composable(Screen.Registration.route) {
             RegistrationScreen(
                 navController = navController,
@@ -99,12 +105,16 @@ fun NavGraph(
                 isLoading = authViewModel.isLoading.collectAsState().value
             )
         }
+        
+        // Search screen destination
         composable(Screen.Search.route) {
             SearchScreen(
                 navController,
                 searchViewModel
             )
         }
+        
+        // Search results screen destination
         composable(Screen.SearchResults.route) {
             SearchResultsScreen(
                 navController = navController,
@@ -113,9 +123,13 @@ fun NavGraph(
                 favoritesViewModel = favoritesViewModel
             )
         }
+        
+        // Cart screen destination
         composable(Screen.Cart.route) {
             CartScreen(navController, cartViewModel)
         }
+        
+        // Home screen destination
         composable(Screen.Home.route) {
             HomeScreen(
                 navController = navController,
@@ -123,6 +137,8 @@ fun NavGraph(
                 favoritesViewModel = favoritesViewModel
             )
         }
+        
+        // Medication details screen destination with argument
         composable(
             route = Screen.MedicationDetails.createRoute("{medicationId}"),
             arguments = listOf(navArgument("medicationId") {
@@ -137,9 +153,13 @@ fun NavGraph(
                 favoritesViewModel = favoritesViewModel
             )
         }
+        
+        // Checkout screen destination
         composable(Screen.Checkout.route) {
             CheckoutScreen(navController, cartViewModel)
         }
+        
+        // Profile screen destination
         composable(Screen.Profile.route) {
             ProfileScreen(
                 navController = navController,
@@ -155,6 +175,8 @@ fun NavGraph(
                 }
             )
         }
+        
+        // Favorites screen destination
         composable(Screen.Favorites.route) {
             FavoritesScreen(
                 navController = navController,
@@ -165,6 +187,7 @@ fun NavGraph(
     }
 }
 
+// Navigates to the specified screen, optionally clearing the back stack
 fun navigateTo(navController: NavController, screen: Screen, clearStack: Boolean = false) {
     navController.navigate(screen.route) {
         if (clearStack) {

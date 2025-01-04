@@ -54,12 +54,14 @@ fun SearchScreen(
     navController: NavController,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
+    // State variables for search inputs and filters
     var query by remember { mutableStateOf("") }
     var minPrice by remember { mutableStateOf("") }
     var maxPrice by remember { mutableStateOf("") }
     var selectedSort by remember { mutableStateOf(SortOption.NAME) }
     var favoritesOnly by remember { mutableStateOf(false) }
 
+    // Scaffold to structure the search screen layout
     MScaffold(
         navController = navController,
         title = "Search",
@@ -69,7 +71,7 @@ fun SearchScreen(
             .padding(Dimensions.paddingLarge)
             .padding(bottom = Dimensions.paddingMedium),
         bottomBar = {
-            // Search button
+            // Search button to apply filters and navigate to results
             MButton(
                 onClick = {
                     viewModel.setFilters(
@@ -93,10 +95,12 @@ fun SearchScreen(
             )
         }
     ) {
+        // Column to arrange search input fields and filters vertically
         Column(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
+            // Text field for entering the search query
             MTextField(
                 value = query,
                 onValueChange = { query = it },
@@ -108,10 +112,12 @@ fun SearchScreen(
             )
             Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+            // Row layout for minimum and maximum price input fields
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                // Text field for minimum price
                 MTextField(
                     value = minPrice,
                     onValueChange = { minPrice = it },
@@ -122,6 +128,7 @@ fun SearchScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
                 Spacer(modifier = Modifier.width(Dimensions.marginMedium))
+                // Text field for maximum price
                 MTextField(
                     value = maxPrice,
                     onValueChange = { maxPrice = it },
@@ -135,6 +142,7 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.padding(Dimensions.marginMedium))
 
+            // Checkbox to filter results by favorites only
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -148,6 +156,7 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.padding(Dimensions.marginMedium))
 
+            // Text and chips for selecting sort options
             Text("Sort by:", style = Typography.titleSmall)
             Spacer(modifier = Modifier.padding(Dimensions.marginSmall))
             FlowRow(
@@ -157,6 +166,7 @@ fun SearchScreen(
                         Alignment.CenterHorizontally),
                 verticalArrangement = Arrangement.spacedBy(Dimensions.marginMedium),
             ) {
+                // Iterate through sort options and create selectable chips
                 SortOption.entries.forEach { option ->
                     FilterChip(
                         selected = selectedSort == option,

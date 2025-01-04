@@ -20,29 +20,36 @@ class SearchViewModel @Inject constructor(
     private val repository: MedicationRepository,
     private val favoritesRepository: FavoritesRepositoryInterface // Inject FavoritesRepository
 ) : ViewModel() {
+    // StateFlow to hold search results
     private val _searchResults = MutableStateFlow<List<Medication>>(emptyList())
     val searchResults: StateFlow<List<Medication>> = _searchResults
 
+    // StateFlow to hold current search filters
     private val _filters = MutableStateFlow(SearchFilter())
     val filters: StateFlow<SearchFilter> = _filters
 
+    // StateFlow to hold the search query
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query
 
+    // Function to update search filters and trigger search
     fun setFilters(filters: SearchFilter) {
         _filters.value = filters
         search()
     }
 
+    // Function to perform search based on current filters
     private fun search() {
         viewModelScope.launch {
             var medications = repository.getMedications()
 
+            // Apply favorites filter if enabled
             if (filters.value.favoritesOnly) {
                 val favoriteIds = favoritesRepository.getFavorites().first()
                 medications = medications.filter { favoriteIds.contains(it.id) }
             }
 
+            // Apply price and query filters
             medications = medications.filter { medication ->
                 medication.price >= filters.value.minPrice &&
                 medication.price <= filters.value.maxPrice &&
@@ -50,6 +57,7 @@ class SearchViewModel @Inject constructor(
                  medication.description.contains(filters.value.query, ignoreCase = true))
             }
 
+            // Apply sorting based on selected sort option
             _searchResults.value = when (filters.value.sortBy) {
                 SortOption.NAME -> medications.sortedBy { it.name }
                 SortOption.PRICE_ASC -> medications.sortedBy { it.price }
@@ -58,6 +66,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    // Function to remove a specific filter and update search results
     fun removeFilter(type: FilterType) {
         when (type) {
             FilterType.QUERY -> {

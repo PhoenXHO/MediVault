@@ -17,23 +17,25 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(private val userPreferences: UserPreferences) : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    // Add state for current user
+    // StateFlow to hold the current authenticated user
     private val _currentUser = MutableStateFlow(auth.currentUser)
     val currentUser: StateFlow<FirebaseUser?> get() = _currentUser
 
-    // Add states for error messages
+    // StateFlow to hold authentication error messages
     private val _authError = MutableStateFlow<String?>(null)
     val authError: StateFlow<String?> get() = _authError
 
-    // Add loading state
+    // StateFlow to indicate loading state during authentication processes
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
     init {
+        // Listen for authentication state changes
         auth.addAuthStateListener { firebaseAuth ->
             _currentUser.value = firebaseAuth.currentUser
             _currentUser.value?.let { user ->
                 viewModelScope.launch {
+                    // Save user information to preferences upon successful authentication
                     userPreferences.saveUserInfo(
                         UserInfo(
                             displayName = user.displayName ?: "",
@@ -45,14 +47,16 @@ class AuthViewModel @Inject constructor(private val userPreferences: UserPrefere
         }
     }
 
+    // Function to sign out the current user
     fun signOut() {
         auth.signOut()
         viewModelScope.launch {
+            // Clear user information from preferences upon sign-out
             userPreferences.clearUserInfo()
         }
     }
 
-    // Manual registration function
+    // Function to handle user registration with email and password
     fun register(
         firstName: String,
         lastName: String,
@@ -63,9 +67,11 @@ class AuthViewModel @Inject constructor(private val userPreferences: UserPrefere
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                // Create a new user with email and password
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
+                        // Update the user's profile with display name
                         val profileUpdates = userProfileChangeRequest {
                             displayName = "$firstName $lastName"
                         }
@@ -73,19 +79,21 @@ class AuthViewModel @Inject constructor(private val userPreferences: UserPrefere
                         _authError.value = null
                         onRegister()
                     } else {
+                        // Set authentication error message if registration fails
                         _authError.value = task.exception?.message
                     }
                 }.addOnCompleteListener {
                     _isLoading.value = false
                 }
             } catch (e: Exception) {
+                // Handle exceptions and set error message
                 _authError.value = e.message
                 _isLoading.value = false
             }
         }
     }
 
-    // Manual login function
+    // Function to handle user login with email and password
     fun login(
         email: String,
         password: String,
@@ -94,23 +102,27 @@ class AuthViewModel @Inject constructor(private val userPreferences: UserPrefere
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                // Sign in the user with email and password
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _authError.value = null
                         onLogin()
                     } else {
+                        // Set authentication error message if login fails
                         _authError.value = task.exception?.message
                     }
                 }.addOnCompleteListener {
                     _isLoading.value = false
                 }
             } catch (e: Exception) {
+                // Handle exceptions and set error message
                 _authError.value = e.message
                 _isLoading.value = false
             }
         }
     }
 
+    // Function to clear authentication error messages
     fun clearAuthError() {
         _authError.value = null
     }

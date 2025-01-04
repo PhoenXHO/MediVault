@@ -19,65 +19,72 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
-// To provide the app dependencies using dependency injection (DI) with Dagger Hilt
+// Module to provide application-level dependencies using Dagger Hilt
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
-	@Binds
-	@Singleton
-	abstract fun bindFavoritesRepository(favoritesRepository: FavoritesRepository)
-		: FavoritesRepositoryInterface
+    @Binds
+    @Singleton
+    abstract fun bindFavoritesRepository(favoritesRepository: FavoritesRepository)
+        : FavoritesRepositoryInterface
 
-	companion object {
-		@Provides
-		@Singleton
-		fun provideUserPreferences(@ApplicationContext context: Context): UserPreferences {
-			return UserPreferences(context)
-		}
+    companion object {
+        // Provides a singleton instance of UserPreferences
+        @Provides
+        @Singleton
+        fun provideUserPreferences(@ApplicationContext context: Context): UserPreferences {
+            return UserPreferences(context)
+        }
 
-		@Provides
-		@Singleton
-		fun provideFirebaseAuth(): FirebaseAuth {
-			return FirebaseAuth.getInstance()
-		}
+        // Provides a singleton instance of FirebaseAuth
+        @Provides
+        @Singleton
+        fun provideFirebaseAuth(): FirebaseAuth {
+            return FirebaseAuth.getInstance()
+        }
 
-		@Provides
-		@Singleton
-		fun provideFirebaseFirestore(): FirebaseFirestore {
-			return FirebaseFirestore.getInstance()
-		}
+        // Provides a singleton instance of FirebaseFirestore
+        @Provides
+        @Singleton
+        fun provideFirebaseFirestore(): FirebaseFirestore {
+            return FirebaseFirestore.getInstance()
+        }
 
-		@Provides
-		@Singleton
-		fun provideCoroutineScope(): CoroutineScope {
-			return CoroutineScope(SupervisorJob())
-		}
+        // Provides a singleton CoroutineScope
+        @Provides
+        @Singleton
+        fun provideCoroutineScope(): CoroutineScope {
+            return CoroutineScope(SupervisorJob())
+        }
 
+        // Provides a singleton instance of AppDatabase
+        @Provides
+        @Singleton
+        fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+            return AppDatabase.getDatabase(context, CoroutineScope(SupervisorJob()))
+        }
 
-		@Provides
-		@Singleton
-		fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-			return AppDatabase.getDatabase(context, CoroutineScope(SupervisorJob()))
-		}
+        // Provides MedicationDao from AppDatabase
+        @Provides
+        fun provideMedicationDao(database: AppDatabase): MedicationDao {
+            return database.medicationDao()
+        }
 
-		@Provides
-		fun provideMedicationDao(database: AppDatabase): MedicationDao {
-			return database.medicationDao()
-		}
+        // Provides a singleton instance of MedicationRepository
+        @Provides
+        @Singleton
+        fun provideMedicationRepository(medicationDao: MedicationDao): MedicationRepository {
+            return MedicationRepository(medicationDao)
+        }
 
-		@Provides
-		@Singleton
-		fun provideMedicationRepository(medicationDao: MedicationDao): MedicationRepository {
-			return MedicationRepository(medicationDao)
-		}
-
-		@Provides
-		@Singleton
-		fun provideFavoritesRepository(
-			auth: FirebaseAuth,
-			firestore: FirebaseFirestore
-		): FavoritesRepository {
-			return FavoritesRepository(auth, firestore)
-		}
-	}
+        // Provides a singleton instance of FavoritesRepository
+        @Provides
+        @Singleton
+        fun provideFavoritesRepository(
+            auth: FirebaseAuth,
+            firestore: FirebaseFirestore
+        ): FavoritesRepository {
+            return FavoritesRepository(auth, firestore)
+        }
+    }
 }

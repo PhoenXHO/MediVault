@@ -58,6 +58,7 @@ fun RegistrationScreen(
 
     LaunchedEffect(authError) {
         authError?.let {
+            // Show authentication error in snackbar
             snackbarHostState.showSnackbar(it)
             onAuthErrorShown()
         }
@@ -81,6 +82,7 @@ fun RegistrationScreen(
                 Spacer(modifier = Modifier.height(Dimensions.marginExtraLarge))
 
                 Row {
+                    // Text field for first name input
                     MTextField(
                         value = firstName,
                         onValueChange = { firstName = it },
@@ -90,6 +92,7 @@ fun RegistrationScreen(
                     )
                     Spacer(modifier = Modifier.width(Dimensions.marginMedium))
 
+                    // Text field for last name input
                     MTextField(
                         value = lastName,
                         onValueChange = { lastName = it },
@@ -100,6 +103,7 @@ fun RegistrationScreen(
                 }
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                // Text field for email input
                 MTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -108,6 +112,7 @@ fun RegistrationScreen(
                 )
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                // Text field for password input
                 MTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -117,6 +122,7 @@ fun RegistrationScreen(
                 )
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
+                // Text field for confirming password input
                 MTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
@@ -128,6 +134,7 @@ fun RegistrationScreen(
 
                 MButton(
                     onClick = {
+                        // Validate user input before registration
                         val validationError = validateInput(
                             firstName, lastName, email, password, confirmPassword)
                         if (validationError != null) {
@@ -135,6 +142,7 @@ fun RegistrationScreen(
                                 snackbarHostState.showSnackbar(validationError)
                             }
                         } else {
+                            // Proceed with registration if input is valid
                             onRegister(firstName, lastName, email, password)
                         }
                     },
@@ -142,6 +150,7 @@ fun RegistrationScreen(
                     enabled = !isLoading // Disable button when loading
                 ) {
                     if (isLoading) {
+                        // Show loading indicator while registering
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
@@ -153,12 +162,14 @@ fun RegistrationScreen(
                     Text("Register")
                 }
 
+                // Button for Google sign-in
                 GoogleSignInButton(navController)
                 Spacer(modifier = Modifier.height(Dimensions.marginMedium))
 
                 Text(
                     text = "Already have an account? Login here",
                     modifier = Modifier.clickable {
+                        // Navigate to login screen
                         navigateTo(navController, Screen.Login, clearStack = true)
                     },
                     color = MaterialTheme.colorScheme.secondary,

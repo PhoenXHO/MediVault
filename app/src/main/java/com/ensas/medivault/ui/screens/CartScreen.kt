@@ -35,6 +35,7 @@ import com.ensas.medivault.viewmodel.CartViewModel
 
 @Composable
 fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
+    // Collect cart items from the view model
     val cartItems by cartViewModel.cartItems.collectAsState()
 
     MScaffold(
@@ -48,6 +49,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
             .padding(bottom = Dimensions.paddingMedium),
         bottomBar = {
             Column {
+                // Display total price of cart items
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -64,6 +66,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
+                // Button to proceed to checkout
                 MButton(
                     onClick = { navController.navigate(Screen.Checkout.route) },
                     modifier = Modifier.fillMaxWidth(),
@@ -77,6 +80,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
         }
     ) {
         if (cartItems.isEmpty()) {
+            // Display message when cart is empty
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -87,6 +91,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                 )
             }
         } else {
+            // Display list of cart items
             Column(modifier = Modifier.fillMaxSize()) {
                 Text(
                     text = "Review your cart items:",
@@ -99,6 +104,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                         .padding(horizontal = Dimensions.paddingSmall)
                 ) {
                     items(cartItems) { item ->
+                        // Row representing each cart item
                         CartItemRow(item, cartViewModel)
                         if (item != cartItems.last())
                             HorizontalDivider()

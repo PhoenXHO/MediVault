@@ -9,6 +9,7 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class MediVaultApplication : Application() {
     override fun onCreate() {
+        // Enable StrictMode policies in debug builds for debugging purposes
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
@@ -21,6 +22,7 @@ class MediVaultApplication : Application() {
         }
 
         super.onCreate()
+        // Initialize Firebase when the application starts
         FirebaseApp.initializeApp(this)
     }
 }

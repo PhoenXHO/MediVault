@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+// Defines the dark color scheme for the app
 private val DarkColorScheme = darkColorScheme(
     primary = RadicalRed,
     secondary = ColdLips,
@@ -26,6 +27,7 @@ private val DarkColorScheme = darkColorScheme(
     scrim = Indigo,
 )
 
+// Defines the light color scheme for the app
 private val LightColorScheme = lightColorScheme(
     primary = RadicalRed,
     secondary = SpectrumBlue,
@@ -52,6 +54,7 @@ fun MediVaultTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    // Chooses the appropriate color scheme based on the theme settings
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -62,6 +65,7 @@ fun MediVaultTheme(
         else -> LightColorScheme
     }
 
+    // Applies the MaterialTheme with the selected color scheme and typography
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

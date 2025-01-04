@@ -1,4 +1,3 @@
-
 package com.ensas.medivault.ui.components
 
 import androidx.compose.foundation.border
@@ -32,6 +31,7 @@ fun QuantityChooser(
     onDecrease: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Container for the quantity chooser with optional styling
     Surface(
         color = if (stylized) MaterialTheme.colorScheme.tertiary
             else Color.Transparent,
@@ -44,11 +44,13 @@ fun QuantityChooser(
             )
             else Modifier
     ) {
+        // Row layout for the decrease button, quantity display, and increase button
         Row(
             modifier = modifier,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Button to decrease the quantity
             IconButton(onClick = onDecrease) {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -57,6 +59,7 @@ fun QuantityChooser(
                 )
             }
 
+            // Text display of the current quantity
             Text(
                 text = "$quantity",
                 modifier = Modifier.width(20.dp),
@@ -64,6 +67,7 @@ fun QuantityChooser(
                 style = Typography.bodySmall
             )
 
+            // Button to increase the quantity
             IconButton(onClick = onIncrease) {
                 Icon(
                     modifier = Modifier.size(24.dp),

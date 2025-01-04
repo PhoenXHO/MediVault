@@ -45,6 +45,7 @@ fun SearchResultsScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     favoritesViewModel: FavoritesViewModel
 ) {
+    // Collect search results and filters from the view model
     val searchResults by viewModel.searchResults.collectAsState()
     val filters by viewModel.filters.collectAsState()
     var showFilterDialog by remember { mutableStateOf(false) }
@@ -54,11 +55,13 @@ fun SearchResultsScreen(
         title = "Search Results",
         backArrow = true,
         actions = {
+            // Button to open filter dialog
             IconButton(onClick = { showFilterDialog = true }) {
                 Icon(Icons.Filled.FilterList, "Edit Filters")
             }
         },
         bottomBar = {
+            // Bottom navigation bar
             MBottomBar(
                 navController = navController,
                 currentScreen = Screen.Home,
@@ -74,13 +77,14 @@ fun SearchResultsScreen(
                 .fillMaxSize()
                 .padding(horizontal = Dimensions.paddingLarge)
         ) {
-            // Active filters bar
+            // Display active filters
             FilterBar(
                 filter = filters,
                 onRemoveFilter = { type -> viewModel.removeFilter(type) }
             )
 
             if (searchResults.isNotEmpty()) {
+                // Show number of results found
                 Text(
                     text = "Found " +
                             if (searchResults.size == 1) "1 result"
@@ -89,7 +93,7 @@ fun SearchResultsScreen(
                 )
             }
 
-            // Search results
+            // Display search results or a message if empty
             if (searchResults.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -98,6 +102,7 @@ fun SearchResultsScreen(
                     Text("No results found")
                 }
             } else {
+                // List of medications matching the search
                 MedicationsList(
                     medications = searchResults,
                     state = rememberLazyListState(),
@@ -108,11 +113,12 @@ fun SearchResultsScreen(
                 )
             }
 
-            // Filter Dialog
+            // Dialog for filtering search results
             if (showFilterDialog) {
                 FilterDialog(
                     currentFilter = filters,
                     onApplyFilters = { newFilters ->
+                        // Apply new filters and close dialog
                         viewModel.setFilters(newFilters)
                         showFilterDialog = false
                     },

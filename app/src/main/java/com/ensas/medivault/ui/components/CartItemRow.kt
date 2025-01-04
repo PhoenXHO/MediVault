@@ -20,12 +20,14 @@ import com.ensas.medivault.viewmodel.CartViewModel
 
 @Composable
 fun CartItemRow(item: Medication, cartViewModel: CartViewModel) {
+    // Row layout to display medication details and quantity controls
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Column for medication name and contents
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(Dimensions.marginSmall)
@@ -39,19 +41,23 @@ fun CartItemRow(item: Medication, cartViewModel: CartViewModel) {
                 style = Typography.labelSmall
             )
         }
+        // Display total price for the medication item
         PriceText(
             price = item.totalPrice,
             style = Typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface
         )
+        // Quantity chooser to adjust the number of items
         QuantityChooser(
             quantity = item.quantity,
             stylized = false,
             onIncrease = { cartViewModel.updateQuantity(item.id, item.quantity + 1) },
             onDecrease = {
                 if (item.quantity > 1) {
+                    // Decrease quantity if more than one
                     cartViewModel.updateQuantity(item.id, item.quantity - 1)
                 } else {
+                    // Remove item from cart if quantity is one
                     cartViewModel.removeFromCart(item.id)
                 }
             }

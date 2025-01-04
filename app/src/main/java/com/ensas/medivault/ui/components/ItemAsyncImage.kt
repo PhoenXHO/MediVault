@@ -21,6 +21,7 @@ fun ItemAsyncImage(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop
 ) {
+    // Configure the image loader with debug logging
     val imageLoader = LocalContext.current.imageLoader.newBuilder()
         .logger(DebugLogger())
         .build()
@@ -35,6 +36,7 @@ fun ItemAsyncImage(
         contentScale = contentScale,
         imageLoader = imageLoader,
         loading = {
+            // Display a loading indicator while the image is loading
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -43,6 +45,7 @@ fun ItemAsyncImage(
             }
         },
         error = {
+            // Display a loading indicator in case of an error
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

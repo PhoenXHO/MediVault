@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ensas.medivault.ui.navigation.Screen
 import com.ensas.medivault.ui.theme.MediVaultTheme
 
-// For the main scaffold component (which contains the top bar and the bottom navigation bar)
+// Main scaffold that includes the top bar, bottom navigation, and action icons
 @Composable
 fun MainScaffold(
     navController: NavController,
@@ -28,12 +28,14 @@ fun MainScaffold(
     bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
+    // Utilize MScaffold to structure the layout
     MScaffold(
         navController = navController,
         title = title,
         contentModifier = contentModifier,
         bottomBar = bottomBar,
         actions = {
+            // Search action icon in the top bar
             IconButton(
                 onClick = { navController.navigate(Screen.Search.route) },
                 colors = IconButtonDefaults.iconButtonColors(
@@ -42,6 +44,7 @@ fun MainScaffold(
             ) {
                 Icon(imageVector = Icons.Filled.Search, "Search")
             }
+            // Cart action icon in the top bar
             IconButton(
                 onClick = { navController.navigate(Screen.Cart.route) },
                 colors = IconButtonDefaults.iconButtonColors(
@@ -52,11 +55,11 @@ fun MainScaffold(
             }
         }
     ) { paddingValues ->
+        // Content of the scaffold with applied padding
         content(paddingValues)
     }
 }
 
-// Preview the MainScaffold component
 @Preview(showBackground = true)
 @Composable
 fun MainScaffoldPreview() {

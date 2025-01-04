@@ -34,10 +34,14 @@ fun FavoritesScreen(
     medicationsViewModel: MedicationsViewModel = hiltViewModel(),
     favoritesViewModel: FavoritesViewModel
 ) {
+    // Collect favorites from the view model
     val favorites by favoritesViewModel.favorites.collectAsState()
+    // Collect all medications to filter favorites
     val allMedications by medicationsViewModel.medications.collectAsState()
+    // Filter medications that are marked as favorites
     val favoriteMedications = allMedications.filter { favorites.contains(it.id) }
 
+    // Remember the scroll state for the favorites list
     val state = rememberLazyListState()
 
     MainScaffold(
@@ -45,6 +49,7 @@ fun FavoritesScreen(
         navController = navController,
         contentModifier = Modifier.padding(horizontal = Dimensions.paddingLarge),
         bottomBar = {
+            // Bottom navigation bar
             MBottomBar(
                 navController = navController,
                 currentScreen = Screen.Favorites,
@@ -55,6 +60,7 @@ fun FavoritesScreen(
             )
         }
     ) {
+        // Display the list of favorite medications
         MedicationsList(
             medications = favoriteMedications,
             state = state,
@@ -72,6 +78,7 @@ fun FavoriteButton(
     addToFavorites: () -> Unit,
     removeFromFavorites: () -> Unit
 ) {
+    // Button to add or remove medication from favorites
     IconButton(
         modifier = modifier,
         onClick = {

@@ -39,16 +39,16 @@ fun MScaffold(
     actions: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
-    // Scaffold is a layout component that implements the basic material design visual structure
-    // It provides a top bar, a bottom navigation bar, and a floating action button
+    // Scaffold provides the basic layout structure with top and bottom bars
     Scaffold(
-        // The top bar is a toolbar that displays the title and actions for the current screen
+        // TopAppBar displays the title and optional action icons
         topBar = {
             TopAppBar(
                 title = { Text(title, color = MaterialTheme.colorScheme.onSurface) },
                 actions = actions,
                 navigationIcon = {
                     if (backArrow) {
+                        // Display back arrow if enabled
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                         }
@@ -60,6 +60,7 @@ fun MScaffold(
                 )
             )
         },
+        // Bottom bar with optional modifiers and content
         bottomBar = {
             Surface(
                 modifier = Modifier
@@ -74,6 +75,7 @@ fun MScaffold(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
+        // Content of the scaffold with applied padding
         Column(
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding())

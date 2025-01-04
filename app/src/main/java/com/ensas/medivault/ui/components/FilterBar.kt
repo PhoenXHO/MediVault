@@ -24,13 +24,14 @@ fun FilterBar(
     filter: SearchFilter,
     onRemoveFilter: (FilterType) -> Unit
 ) {
+    // FlowRow to display active filters in a wrapped horizontal layout
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Dimensions.marginMedium),
         verticalArrangement = Arrangement.spacedBy(Dimensions.marginMedium),
         maxItemsInEachRow = Int.MAX_VALUE
     ) {
-        // Query Filter
+        // Display query filter chip if a query is present
         if (filter.query.isNotEmpty()) {
             FilterChip(
                 selected = true,
@@ -43,7 +44,7 @@ fun FilterBar(
             )
         }
 
-        // Price Range Filter
+        // Display price range filter chip if min or max price is set
         if (filter.minPrice > 0.0 || filter.maxPrice < Double.MAX_VALUE) {
             FilterChip(
                 selected = true,
@@ -56,7 +57,7 @@ fun FilterBar(
             )
         }
 
-        // Only Favorites Filter
+        // Display favorites only filter chip if enabled
         if (filter.favoritesOnly) {
             FilterChip(
                 selected = true,
@@ -69,7 +70,7 @@ fun FilterBar(
             )
         }
 
-        // Sort Option Filter
+        // Display sort option filter chip if not default
         if (filter.sortBy != SortOption.NAME) {
             FilterChip(
                 selected = true,
@@ -84,7 +85,7 @@ fun FilterBar(
     }
 }
 
-// Enum to represent filter types
+// Enum to represent different types of filters
 enum class FilterType {
     QUERY,
     PRICE_RANGE,
@@ -92,7 +93,7 @@ enum class FilterType {
     FAVORITES_ONLY,
 }
 
-// Helper function to format price range
+// Helper function to format the price range text
 private fun formulatePrice(minPrice: Double, maxPrice: Double): String {
     return if (minPrice > 0.0 && maxPrice < Double.MAX_VALUE) {
         "Price: $minPrice - $maxPrice"

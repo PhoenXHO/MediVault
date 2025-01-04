@@ -14,20 +14,20 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
     private val favoritesRepository: FavoritesRepositoryInterface
 ) : ViewModel() {
-    // Add states for error messages
+    // StateFlow to hold authentication error messages related to favorites
     private val _authError = MutableStateFlow<Int?>(null)
     val authError: StateFlow<Int?> get() = _authError
 
-    // Add loading state
+    // StateFlow to indicate loading state during favorite operations
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    // Favorites state
+    // StateFlow to hold the list of favorite medication IDs
     private val _favorites = MutableStateFlow<List<Int>>(emptyList())
     val favorites = _favorites.asStateFlow()
 
+    // Function to initialize and observe favorites from the repository
     fun initFavorites() {
-        // Observe favorites from repository
         viewModelScope.launch {
             favoritesRepository.getFavorites().collect { favoriteList ->
                 _favorites.value = favoriteList
@@ -35,14 +35,14 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    // Add to favorites
+    // Function to add a medication to favorites
     fun addToFavorites(medicationId: Int) {
         viewModelScope.launch {
             favoritesRepository.addFavorite(medicationId)
         }
     }
 
-    // Remove from favorites
+    // Function to remove a medication from favorites
     fun removeFromFavorites(medicationId: Int) {
         viewModelScope.launch {
             favoritesRepository.removeFavorite(medicationId)

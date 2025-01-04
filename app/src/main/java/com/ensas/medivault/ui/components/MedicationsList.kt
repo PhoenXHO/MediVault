@@ -35,8 +35,7 @@ fun MedicationsList(
     modifier: Modifier = Modifier,
     bottomPadding: Dp = 0.dp
 ) {
-    // `LazyColumn` is a vertically scrolling grid that only composes and lays out the currently visible items
-    // (Equivalent to using `RecyclerView` in Android)
+    // LazyColumn for efficient vertical scrolling of medication items
     LazyColumn(
         state = state,
         modifier = modifier
@@ -45,11 +44,13 @@ fun MedicationsList(
         userScrollEnabled = true
     ) {
         items(medications) { medication ->
+            // Composable representing each medication item
             MedicationItem(
                 medication = medication,
                 cartViewModel = cartViewModel,
                 favoritesViewModel = favoritesViewModel,
                 onItemClick = { medicationId ->
+                    // Navigate to medication details screen on item click
                     navController.navigate(
                         Screen.MedicationDetails.createRoute(medicationId.toString())
                     )

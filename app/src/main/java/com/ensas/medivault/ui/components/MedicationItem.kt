@@ -41,7 +41,7 @@ import com.ensas.medivault.ui.theme.Typography
 import com.ensas.medivault.viewmodel.CartViewModel
 import com.ensas.medivault.viewmodel.FavoritesViewModel
 
-// To define the layout of a single medication item
+// Composable to display a single medication item in a card
 @Composable
 fun MedicationItem(
     modifier: Modifier = Modifier,
@@ -50,29 +50,32 @@ fun MedicationItem(
     favoritesViewModel: FavoritesViewModel,
     onItemClick: (Int) -> Unit
 ) {
+    // State to handle loading state when adding to cart
     var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val medicationId = medication.id
 
-    // Retrieve the current quantity from CartViewModel
+    // Observe cart items to determine the current quantity of this medication
     val cartItems by cartViewModel.cartItems.collectAsState()
     val currentItem = cartItems.find { it.id == medication.id }
     val quantity = currentItem?.quantity ?: 0
 
+    // Observe favorites to determine if this medication is a favorite
     val favorites by favoritesViewModel.favorites.collectAsState()
     val isFavorite = medicationId.let { favorites.contains(it) }
 
-    // Display the medication item in a Card
+    // Card layout for the medication item
     Card(
         modifier = modifier
             .height(138.dp)
-			.fillMaxWidth()
-            .clickable { onItemClick(medication.id) },
+            .fillMaxWidth()
+            .clickable { onItemClick(medication.id) }, // Navigate to details on click
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
         shape = MaterialTheme.shapes.large,
     ) {
+        // Row to arrange image, details, and action buttons horizontally
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -84,7 +87,7 @@ fun MedicationItem(
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Medication image
+            // Image of the medication
             ItemAsyncImage(
                 modifier = Modifier.width(90.dp).height(90.dp),
                 imageUrl = medication.imageUrl,
@@ -92,6 +95,7 @@ fun MedicationItem(
                 contentScale = ContentScale.Fit
             )
 
+            // Column for medication name, contents, and price
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -104,7 +108,7 @@ fun MedicationItem(
                     ),
                 verticalArrangement = Arrangement.SpaceAround
             ) {
-                // Medication name
+                // Medication name with text overflow handling
                 Text(
                     text = medication.name,
                     maxLines = 1,
@@ -112,7 +116,7 @@ fun MedicationItem(
                     style = Typography.titleMedium
                 )
 
-                // Medication info
+                // Medication contents description
                 Text(
                     text = medication.contents,
                     maxLines = 1,
@@ -120,10 +124,11 @@ fun MedicationItem(
                     style = Typography.bodySmall
                 )
 
-                // Medication price
+                // Display the price of the medication
                 PriceText(medication.price)
             }
 
+            // Column for favorite button and cart actions
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -135,7 +140,7 @@ fun MedicationItem(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.End
             ) {
-                // Heart icon for favorites
+                // Favorite button to add or remove from favorites
                 FavoriteButton(
                     modifier = Modifier.size(24.dp),
                     isFavorite = isFavorite,
@@ -143,8 +148,9 @@ fun MedicationItem(
                     removeFromFavorites = { favoritesViewModel.removeFromFavorites(medicationId) }
                 )
 
-                // Conditional UI for Add to cart or Quantity Chooser
+                // Conditional UI: Show "Add" button or quantity chooser based on cart status
                 if (quantity == 0) {
+                    // Button to add medication to the cart
                     MButton(
                         modifier = Modifier
                             .width(240.dp)
@@ -153,6 +159,7 @@ fun MedicationItem(
                             isLoading = true
                             cartViewModel.addToCart(medication)
                             isLoading = false
+                            // Show a toast message upon adding to cart
                             Toast.makeText(
                                 context,
                                 "${medication.name} added to cart",
@@ -165,6 +172,7 @@ fun MedicationItem(
                         )
                     ) {
                         if (isLoading) {
+                            // Show loading indicator while adding to cart
                             CircularProgressIndicator()
                         } else {
                             Text(
@@ -174,6 +182,7 @@ fun MedicationItem(
                         }
                     }
                 } else {
+                    // Quantity chooser to adjust the number of items in the cart
                     QuantityChooser(
                         modifier = Modifier
                             .width(240.dp)

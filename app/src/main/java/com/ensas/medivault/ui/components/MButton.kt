@@ -21,6 +21,7 @@ fun MButton(
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     content: @Composable () -> Unit
 ) {
+    // Custom button with predefined styling and optional modifiers
     Button(
         onClick = onClick,
         shape = MaterialTheme.shapes.extraLarge,

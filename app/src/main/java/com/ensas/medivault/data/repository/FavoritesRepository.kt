@@ -13,12 +13,15 @@ open class FavoritesRepository @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ) : FavoritesRepositoryInterface {
+    // Retrieves the current user's UID
     private val userId: String?
         get() = auth.currentUser?.uid
 
+    // Flow to observe favorite medications from Firestore
     override fun getFavorites(): Flow<List<Int>> = callbackFlow {
         val uid = userId ?: throw IllegalStateException("User is not logged in")
 
+        // Listen for changes in the user's favorites collection
         val listener = firestore.collection("users")
             .document(uid)
             .collection("favorites")
@@ -28,13 +31,16 @@ open class FavoritesRepository @Inject constructor(
                     return@addSnapshotListener
                 }
 
+                // Map documents to medication IDs
                 val favorites = snapshot?.documents?.mapNotNull { it.getLong("id")?.toInt() } ?: emptyList()
                 trySend(favorites).isSuccess
             }
 
+        // Remove listener when flow is no longer collected
         awaitClose { listener.remove() }
     }
 
+    // Adds a medication ID to the user's favorites in Firestore
     override suspend fun addFavorite(medicationId: Int) {
         val uid = userId
         if (uid != null) {
@@ -46,6 +52,7 @@ open class FavoritesRepository @Inject constructor(
         }
     }
 
+    // Removes a medication ID from the user's favorites in Firestore
     override suspend fun removeFavorite(medicationId: Int) {
         val uid = userId
         if (uid != null) {
@@ -58,6 +65,7 @@ open class FavoritesRepository @Inject constructor(
     }
 }
 
+// Fake repository for testing favorites functionality
 class FakeFavoritesRepository : FavoritesRepositoryInterface {
     private val favorites = mutableSetOf(1, 2)
 

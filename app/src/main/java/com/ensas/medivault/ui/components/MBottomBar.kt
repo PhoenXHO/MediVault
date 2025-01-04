@@ -45,6 +45,7 @@ fun MBottomBar(
     currentScreen: Screen,
     modifier: Modifier = Modifier
 ) {
+    // Card container for the bottom navigation bar with styling
     Card(
         shape = Shapes.extraLarge,
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -55,6 +56,7 @@ fun MBottomBar(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         )
     ) {
+        // Row layout for navigation icons spaced evenly
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,6 +64,7 @@ fun MBottomBar(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Home navigation button
             IconButton(
                 onClick = { navigateTo(navController, Screen.Home, currentScreen) },
                 modifier = Modifier.size(72.dp)
@@ -73,6 +76,7 @@ fun MBottomBar(
                     isSelected = currentScreen == Screen.Home
                 )
             }
+            // Favorites navigation button
             IconButton(
                 onClick = { navigateTo(navController, Screen.Favorites, currentScreen) },
                 modifier = Modifier.size(72.dp)
@@ -84,6 +88,7 @@ fun MBottomBar(
                     isSelected = currentScreen == Screen.Favorites
                 )
             }
+            // Profile navigation button
             IconButton(
                 onClick = { navigateTo(navController, Screen.Profile, currentScreen) },
                 modifier = Modifier.size(72.dp)
@@ -99,6 +104,7 @@ fun MBottomBar(
     }
 }
 
+// Helper function to navigate to a different screen if not already selected
 private fun navigateTo(navController: NavController, screen: Screen, currentScreen: Screen) {
     if (currentScreen != screen) {
         navigateTo(navController, screen, clearStack = true)
@@ -112,11 +118,13 @@ fun IconWithText(
     text: String,
     isSelected: Boolean
 ) {
+    // Column layout to stack the icon and text vertically
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         if (isSelected) {
+            // Highlighted icon when selected
             Box(
                 modifier = Modifier
                     .size(36.dp)
@@ -133,12 +141,14 @@ fun IconWithText(
                 )
             }
         } else {
+            // Default icon when not selected
             Icon(
                 imageVector = icon,
                 contentDescription = text
             )
         }
 
+        // Text label below the icon
         Text(
             text = text,
             style = TextStyle(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),

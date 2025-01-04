@@ -46,6 +46,7 @@ fun ProfileScreen(
     showConfirmationDialog: Boolean = false,
     onLogout: () -> Unit
 ) {
+    // State variable to control the visibility of the logout confirmation dialog
     var showDialog by remember { mutableStateOf(showConfirmationDialog) }
 
     MainScaffold(
@@ -70,6 +71,7 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.Center
         ) {
             currentUser?.let { user ->
+                // Display the user's profile photo
                 SubcomposeAsyncImage(
                     contentDescription = "Profile Photo",
                     model = ImageRequest.Builder(LocalContext.current)
@@ -83,6 +85,7 @@ fun ProfileScreen(
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop,
                     loading = {
+                        // Show a loading indicator while the image is loading
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -91,6 +94,7 @@ fun ProfileScreen(
                         }
                     },
                     error = {
+                        // Show a fallback UI in case the image fails to load
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -101,15 +105,18 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Display the user's name
                 Text(
                     text = user.displayName,
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Display the user's email
                 Text(text = user.email, style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Logout button to initiate the logout process
                 MButton(
                     onClick = { showDialog = true },
                     colors = ButtonDefaults.buttonColors(
@@ -120,17 +127,20 @@ fun ProfileScreen(
                     Text("Logout")
                 }
             } ?: run {
+                // Display a message if no user information is available
                 Text("No user information available.")
             }
         }
     }
 
     if (showDialog) {
+        // Confirmation dialog for logging out
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Confirm Logout") },
             text = { Text("Are you sure you want to logout?") },
             confirmButton = {
+                // Confirm logout action
                 MButton(
                     onClick = {
                         onLogout()
@@ -143,6 +153,7 @@ fun ProfileScreen(
                 ) { Text("Logout") }
             },
             dismissButton = {
+                // Cancel logout action
                 MButton(onClick = { showDialog = false }) {
                     Text("Cancel")
                 }
