@@ -1,7 +1,5 @@
 # MediVault
 
-**Note: The `.apk` file can be found in the `app/release` directory.**
-
 ## Firebase Configuration
 
 To build and run this project, you will need to create a Firebase project and add the configuration file to the project. Follow these steps to create a Firebase project and add the configuration file:
