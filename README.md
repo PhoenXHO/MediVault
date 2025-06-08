@@ -1,4 +1,6 @@
-# MediVault
+# MediVault - Secure Medical Data Storage
+
+A Flutter application for securely storing and managing medical data using Firebase as the backend.
 
 ## Firebase Configuration
 
